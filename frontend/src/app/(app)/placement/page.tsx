@@ -6,7 +6,7 @@ import api from '@/lib/api';
 import { useToast } from '@/components/ui/Toaster';
 import { useAuth } from '@/contexts/AuthContext';
 import { DEMO_PLACEMENTS } from '@/lib/demoData';
-import { Briefcase, Plus, X, Loader2, Edit3 } from 'lucide-react';
+import { Briefcase, Plus, X, Loader2, Edit3, Trash2 } from 'lucide-react';
 
 interface Application {
   id: string;
@@ -109,118 +109,121 @@ export default function PlacementPage() {
 
   return (
     <div className="space-y-6 animate-fade-in">
-      <div className="flex flex-col sm:flex-row sm:items-center gap-3">
-        <div className="flex-1 page-header mb-0">
+      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+        <div className="page-header mb-0">
           <h1 className="page-title flex items-center gap-2">
-            <Briefcase className="w-6 h-6" style={{ color: 'var(--color-brand-primary)' }} />
-            Placement Prep Tracker
+            <Briefcase className="w-7 h-7 text-blue-600 dark:text-blue-400" />
+            Placement Application Tracker
           </h1>
-          <p className="page-subtitle">Track your job applications and interview progress</p>
+          <p className="page-subtitle">Track internship & job applications, interview stages, and offers.</p>
         </div>
-        <button className="btn-primary shrink-0" onClick={() => setShowForm(true)}>
+        <button className="btn-primary shrink-0 shadow-md" onClick={() => setShowForm(true)}>
           <Plus className="w-4 h-4" />
           Add Application
         </button>
       </div>
 
-      {/* Stats */}
+      {/* Stats Cards */}
       <div className="grid grid-cols-2 sm:grid-cols-4 gap-4">
         {[
-          { label: 'Total', value: stats.total, color: 'var(--color-brand-primary)' },
+          { label: 'Total Applied', value: stats.total, color: 'var(--color-brand-primary)' },
           { label: 'Interviews', value: stats.interviews, color: 'var(--color-warning)' },
-          { label: 'Offers', value: stats.offers, color: 'var(--color-success)' },
+          { label: 'Offers Received', value: stats.offers, color: 'var(--color-success)' },
           { label: 'Rejected', value: stats.rejected, color: 'var(--color-danger)' },
         ].map(stat => (
           <div key={stat.label} className="stat-card">
-            <p className="text-2xl font-bold" style={{ color: stat.color }}>{stat.value}</p>
-            <p className="text-sm" style={{ color: 'var(--text-muted)' }}>{stat.label}</p>
+            <p className="text-2xl sm:text-3xl font-black" style={{ color: stat.color }}>{stat.value}</p>
+            <p className="text-xs font-bold uppercase tracking-wider mt-1" style={{ color: 'var(--text-muted)' }}>{stat.label}</p>
           </div>
         ))}
       </div>
 
-      {/* Form */}
+      {/* Modal Form */}
       {(showForm || editApp) && (
-        <div className="card p-6 animate-slide-up">
-          <div className="flex items-center justify-between mb-4">
-            <h3 className="font-semibold" style={{ color: 'var(--text-primary)' }}>
-              {editApp ? 'Edit Application' : 'New Application'}
-            </h3>
-            <button className="btn-ghost p-1" onClick={() => { setShowForm(false); setEditApp(null); }}>
-              <X className="w-5 h-5" />
-            </button>
-          </div>
-          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-            <div>
-              <label htmlFor="pl-company" className="label">Company *</label>
-              <input id="pl-company" className="input" placeholder="Company name" value={editApp?.company_name ?? form.companyName}
-                onChange={e => editApp ? setEditApp({...editApp, company_name: e.target.value}) : setForm(p => ({...p, companyName: e.target.value}))} />
+        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-950/60 backdrop-blur-sm animate-fade-in" role="dialog" aria-modal="true">
+          <div className="card w-full max-w-lg p-6 animate-slide-up shadow-xl">
+            <div className="flex items-center justify-between mb-4 border-b pb-3" style={{ borderColor: 'var(--border-default)' }}>
+              <h3 className="font-extrabold text-lg" style={{ color: 'var(--text-primary)' }}>
+                {editApp ? 'Edit Application' : 'New Job / Internship Application'}
+              </h3>
+              <button className="btn-ghost p-1" onClick={() => { setShowForm(false); setEditApp(null); }}>
+                <X className="w-5 h-5" />
+              </button>
             </div>
-            <div>
-              <label htmlFor="pl-role" className="label">Role *</label>
-              <input id="pl-role" className="input" placeholder="Job title" value={editApp?.role ?? form.role}
-                onChange={e => editApp ? setEditApp({...editApp, role: e.target.value}) : setForm(p => ({...p, role: e.target.value}))} />
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+              <div>
+                <label htmlFor="pl-company" className="label">Company Name *</label>
+                <input id="pl-company" className="input font-semibold" placeholder="e.g. Google, Microsoft" value={editApp?.company_name ?? form.companyName}
+                  onChange={e => editApp ? setEditApp({...editApp, company_name: e.target.value}) : setForm(p => ({...p, companyName: e.target.value}))} />
+              </div>
+              <div>
+                <label htmlFor="pl-role" className="label">Job Role *</label>
+                <input id="pl-role" className="input font-semibold" placeholder="e.g. Software Engineer Intern" value={editApp?.role ?? form.role}
+                  onChange={e => editApp ? setEditApp({...editApp, role: e.target.value}) : setForm(p => ({...p, role: e.target.value}))} />
+              </div>
+              <div>
+                <label htmlFor="pl-status" className="label">Application Stage</label>
+                <select id="pl-status" className="input font-semibold" value={editApp?.status ?? form.status}
+                  onChange={e => editApp ? setEditApp({...editApp, status: e.target.value}) : setForm(p => ({...p, status: e.target.value}))}>
+                  {['applied','screening','interview','offer','rejected','withdrawn'].map(s =>
+                    <option key={s} value={s}>{s.charAt(0).toUpperCase() + s.slice(1)}</option>
+                  )}
+                </select>
+              </div>
+              <div>
+                <label htmlFor="pl-next" className="label">Next Step / Date</label>
+                <input id="pl-next" className="input font-medium" placeholder="e.g. Technical Interview" value={editApp?.next_step ?? form.nextStep}
+                  onChange={e => editApp ? setEditApp({...editApp, next_step: e.target.value}) : setForm(p => ({...p, nextStep: e.target.value}))} />
+              </div>
+              <div className="sm:col-span-2">
+                <label htmlFor="pl-notes" className="label">Notes / CTC Details</label>
+                <textarea id="pl-notes" className="input font-medium" rows={2} placeholder="Package details, interview notes..." value={editApp?.notes ?? form.notes}
+                  onChange={e => editApp ? setEditApp({...editApp, notes: e.target.value}) : setForm(p => ({...p, notes: e.target.value}))} />
+              </div>
             </div>
-            <div>
-              <label htmlFor="pl-status" className="label">Status</label>
-              <select id="pl-status" className="input" value={editApp?.status ?? form.status}
-                onChange={e => editApp ? setEditApp({...editApp, status: e.target.value}) : setForm(p => ({...p, status: e.target.value}))}>
-                {['applied','screening','interview','offer','rejected','withdrawn'].map(s =>
-                  <option key={s} value={s}>{s.charAt(0).toUpperCase() + s.slice(1)}</option>
-                )}
-              </select>
-            </div>
-            <div>
-              <label htmlFor="pl-next" className="label">Next Step</label>
-              <input id="pl-next" className="input" placeholder="e.g., Technical Interview" value={editApp?.next_step ?? form.nextStep}
-                onChange={e => editApp ? setEditApp({...editApp, next_step: e.target.value}) : setForm(p => ({...p, nextStep: e.target.value}))} />
-            </div>
-            <div className="sm:col-span-2">
-              <label htmlFor="pl-notes" className="label">Notes</label>
-              <textarea id="pl-notes" className="input" rows={2} placeholder="Additional notes..." value={editApp?.notes ?? form.notes}
-                onChange={e => editApp ? setEditApp({...editApp, notes: e.target.value}) : setForm(p => ({...p, notes: e.target.value}))} />
-            </div>
-          </div>
-          <div className="flex gap-3 mt-4">
-            <button className="btn-secondary flex-1" onClick={() => { setShowForm(false); setEditApp(null); }}>Cancel</button>
-            <button className="btn-primary flex-1"
-              disabled={createMutation.isPending || updateMutation.isPending}
-              onClick={() => {
-                if (editApp) {
-                  if (isDemoMode) {
-                    setDemoApps(prev => prev.map(a => a.id === editApp.id ? { ...a, status: editApp.status, next_step: editApp.next_step, notes: editApp.notes } : a));
-                    toast('success', 'Updated!');
-                    setEditApp(null);
+            <div className="flex gap-3 mt-5 pt-3 border-t" style={{ borderColor: 'var(--border-default)' }}>
+              <button className="btn-secondary flex-1" onClick={() => { setShowForm(false); setEditApp(null); }}>Cancel</button>
+              <button className="btn-primary flex-1 font-bold"
+                disabled={createMutation.isPending || updateMutation.isPending}
+                onClick={() => {
+                  if (editApp) {
+                    if (isDemoMode) {
+                      setDemoApps(prev => prev.map(a => a.id === editApp.id ? { ...a, status: editApp.status, next_step: editApp.next_step, notes: editApp.notes } : a));
+                      toast('success', 'Updated!');
+                      setEditApp(null);
+                    } else {
+                      updateMutation.mutate({ id: editApp.id, data: { status: editApp.status, nextStep: editApp.next_step, notes: editApp.notes } });
+                    }
                   } else {
-                    updateMutation.mutate({ id: editApp.id, data: { status: editApp.status, nextStep: editApp.next_step, notes: editApp.notes } });
+                    handleAddSubmit();
                   }
-                } else {
-                  handleAddSubmit();
-                }
-              }}>
-              {createMutation.isPending || updateMutation.isPending ? <Loader2 className="w-4 h-4 animate-spin" /> : editApp ? 'Save' : 'Add'}
-            </button>
+                }}>
+                {createMutation.isPending || updateMutation.isPending ? <Loader2 className="w-4 h-4 animate-spin" /> : editApp ? 'Save Application' : 'Add Application'}
+              </button>
+            </div>
           </div>
         </div>
       )}
 
-      {/* Applications */}
+      {/* Applications Table */}
       {isLoading ? (
         <div className="flex justify-center py-12">
-          <Loader2 className="w-6 h-6 animate-spin" style={{ color: 'var(--color-brand-primary)' }} />
+          <Loader2 className="w-6 h-6 animate-spin text-blue-600" />
         </div>
       ) : apps.length === 0 ? (
         <div className="card p-12 text-center">
-          <Briefcase className="w-12 h-12 mx-auto mb-3" style={{ color: 'var(--text-muted)' }} />
-          <p style={{ color: 'var(--text-muted)' }}>No applications yet. Start tracking your job search!</p>
+          <Briefcase className="w-12 h-12 mx-auto mb-3 text-slate-400" />
+          <p className="font-bold text-base" style={{ color: 'var(--text-primary)' }}>No applications recorded</p>
+          <p className="text-sm mt-1" style={{ color: 'var(--text-muted)' }}>Click "Add Application" to track your job search.</p>
         </div>
       ) : (
-        <div className="card overflow-hidden">
+        <div className="table-wrapper">
           <table aria-label="Placement applications">
             <thead>
               <tr>
                 <th scope="col">Company</th>
                 <th scope="col">Role</th>
-                <th scope="col">Status</th>
+                <th scope="col">Stage</th>
                 <th scope="col">Next Step</th>
                 <th scope="col">Actions</th>
               </tr>
@@ -228,17 +231,17 @@ export default function PlacementPage() {
             <tbody>
               {apps.map((app) => (
                 <tr key={app.id}>
-                  <td className="font-medium">{app.company_name}</td>
-                  <td>{app.role}</td>
-                  <td><span className={`badge ${statusColors[app.status] || ''} capitalize`}>{app.status}</span></td>
-                  <td style={{ color: 'var(--text-secondary)' }}>{app.next_step ?? '—'}</td>
+                  <td className="font-extrabold text-sm" style={{ color: 'var(--text-primary)' }}>{app.company_name}</td>
+                  <td className="font-semibold">{app.role}</td>
+                  <td><span className={`badge ${statusColors[app.status] || ''} capitalize font-bold`}>{app.status}</span></td>
+                  <td className="font-medium" style={{ color: 'var(--text-secondary)' }}>{app.next_step ?? '—'}</td>
                   <td>
                     <div className="flex gap-1">
                       <button className="btn-ghost p-1.5" onClick={() => setEditApp(app)} aria-label={`Edit ${app.company_name}`}>
-                        <Edit3 className="w-4 h-4" />
+                        <Edit3 className="w-4 h-4 text-slate-500 hover:text-blue-600" />
                       </button>
-                      <button className="btn-ghost p-1.5 text-red-500" onClick={() => {
-                        if (confirm('Delete this application?')) {
+                      <button className="btn-ghost p-1.5 text-rose-500 hover:bg-rose-50 dark:hover:bg-rose-950/30" onClick={() => {
+                        if (confirm('Delete this application entry?')) {
                           if (isDemoMode) {
                             setDemoApps(prev => prev.filter(a => a.id !== app.id));
                             toast('success', 'Application removed');
@@ -247,7 +250,7 @@ export default function PlacementPage() {
                           }
                         }
                       }} aria-label={`Delete ${app.company_name}`}>
-                        <X className="w-4 h-4" />
+                        <Trash2 className="w-4 h-4" />
                       </button>
                     </div>
                   </td>

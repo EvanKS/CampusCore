@@ -46,7 +46,6 @@ export default function AttendancePage() {
   const qc = useQueryClient();
 
   const isTeacherOrAdmin = user?.role === 'teacher' || user?.role === 'admin';
-
   const isParent = user?.role === 'parent';
   const [selectedChildId, setSelectedChildId] = useState('');
 
@@ -73,7 +72,7 @@ export default function AttendancePage() {
     enabled: !isDemoMode && !isTeacherOrAdmin,
   });
 
-  // 2. Fetch recent attendance logs (for all roles)
+  // 2. Fetch recent attendance logs
   const { data: records, isLoading: recordsLoading } = useQuery({
     queryKey: ['attendance', 'records', activeChildId],
     queryFn: () => api.get(activeChildId ? `/attendance?studentId=${activeChildId}` : '/attendance').then(r => r.data),
@@ -94,7 +93,7 @@ export default function AttendancePage() {
     enabled: !isDemoMode && isTeacherOrAdmin && !!selectedSubject,
   });
 
-  // 5. Fetch existing attendance records for the selected subject and date
+  // 5. Fetch existing attendance records
   const { data: existingAttendance } = useQuery({
     queryKey: ['attendance', 'existing', selectedSubject, attendanceDate],
     queryFn: () =>
@@ -102,7 +101,7 @@ export default function AttendancePage() {
     enabled: !isDemoMode && isTeacherOrAdmin && !!selectedSubject && !!attendanceDate,
   });
 
-  // Map existing DB attendance statuses for pre-filling
+  // Map existing DB attendance statuses
   const existingMap = useMemo(() => {
     const map: Record<string, string> = {};
     if (existingAttendance?.data && Array.isArray(existingAttendance.data)) {
@@ -180,23 +179,23 @@ export default function AttendancePage() {
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
         <div className="page-header mb-0">
           <h1 className="page-title flex items-center gap-2">
-            <ClipboardCheck className="w-6 h-6" style={{ color: 'var(--color-brand-primary)' }} />
-            {isTeacherOrAdmin ? 'Class Attendance Management' : 'Attendance Tracking'}
+            <ClipboardCheck className="w-7 h-7 text-blue-600 dark:text-blue-400" />
+            {isTeacherOrAdmin ? 'Class Attendance Portal' : 'Attendance Tracking'}
           </h1>
           <p className="page-subtitle">
             {isTeacherOrAdmin
-              ? 'Select a course subject and date to record or update student attendance.'
+              ? 'Select course subject & session date to record or update class attendance.'
               : isParent
-              ? 'Track attendance records for your linked children.'
-              : 'Track your attendance progress across all enrolled subjects.'}
+              ? 'Monitor subject attendance records for linked student profiles.'
+              : 'Track attendance percentage and risk threshold alerts across all subjects.'}
           </p>
         </div>
 
         {isParent && childrenList.length > 1 && (
           <div className="flex items-center gap-2">
-            <span className="text-xs font-semibold" style={{ color: 'var(--text-muted)' }}>Child:</span>
+            <span className="text-xs font-bold uppercase tracking-wider" style={{ color: 'var(--text-muted)' }}>Child:</span>
             <select
-              className="input py-1.5 px-3 text-xs w-auto font-medium"
+              className="input py-1.5 px-3 text-xs w-auto font-semibold"
               value={activeChildId}
               onChange={e => setSelectedChildId(e.target.value)}
             >
@@ -210,25 +209,23 @@ export default function AttendancePage() {
         )}
       </div>
 
-      {/* ============================================================ */}
       {/* TEACHER / ADMIN ATTENDANCE MARKING PORTAL */}
-      {/* ============================================================ */}
       {isTeacherOrAdmin && (
         <div className="card p-6 space-y-5">
-          <h2 className="font-semibold text-lg" style={{ color: 'var(--text-primary)' }}>
+          <h2 className="font-extrabold text-lg tracking-tight" style={{ color: 'var(--text-primary)' }}>
             Mark / Update Class Attendance
           </h2>
 
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
             <div>
-              <label htmlFor="att-subject" className="label">Select Subject *</label>
+              <label htmlFor="att-subject" className="label">Select Course Subject *</label>
               <select
                 id="att-subject"
-                className="input"
+                className="input font-semibold"
                 value={selectedSubject}
                 onChange={e => setSelectedSubject(e.target.value)}
               >
-                <option value="">Choose assigned subject...</option>
+                <option value="">Choose assigned course subject...</option>
                 {subjectsList.map((s: { id: string; name: string; code: string }) => (
                   <option key={s.id} value={s.id}>{s.name} ({s.code})</option>
                 ))}
@@ -236,11 +233,11 @@ export default function AttendancePage() {
             </div>
 
             <div>
-              <label htmlFor="att-date" className="label">Attendance Date *</label>
+              <label htmlFor="att-date" className="label">Session Date *</label>
               <input
                 id="att-date"
                 type="date"
-                className="input"
+                className="input font-semibold"
                 value={attendanceDate}
                 max={new Date().toISOString().split('T')[0]}
                 onChange={e => setAttendanceDate(e.target.value)}
@@ -250,15 +247,15 @@ export default function AttendancePage() {
 
           {selectedSubject && (
             <div className="border-t pt-5 space-y-4" style={{ borderColor: 'var(--border-default)' }}>
-              <div className="flex items-center justify-between">
-                <p className="text-sm font-semibold flex items-center gap-2" style={{ color: 'var(--text-primary)' }}>
-                  <Users className="w-4 h-4 text-violet-500" />
+              <div className="flex items-center justify-between flex-wrap gap-2">
+                <p className="text-sm font-extrabold flex items-center gap-2" style={{ color: 'var(--text-primary)' }}>
+                  <Users className="w-4 h-4 text-blue-600 dark:text-blue-400" />
                   Student Roster ({studentsList.length} Students)
                 </p>
                 <div className="flex gap-2">
                   <button
                     type="button"
-                    className="text-xs px-2.5 py-1 rounded bg-emerald-100 text-emerald-700 dark:bg-emerald-900/30 dark:text-emerald-300 font-medium hover:opacity-80"
+                    className="text-xs px-3 py-1.5 rounded-lg bg-emerald-100 text-emerald-800 dark:bg-emerald-950/60 dark:text-emerald-300 font-bold hover:opacity-90 transition-opacity"
                     onClick={() => {
                       const allPresent: Record<string, string> = {};
                       studentsList.forEach(s => { allPresent[s.id] = 'present'; });
@@ -269,7 +266,7 @@ export default function AttendancePage() {
                   </button>
                   <button
                     type="button"
-                    className="text-xs px-2.5 py-1 rounded bg-red-100 text-red-700 dark:bg-red-900/30 dark:text-red-300 font-medium hover:opacity-80"
+                    className="text-xs px-3 py-1.5 rounded-lg bg-rose-100 text-rose-800 dark:bg-rose-950/60 dark:text-rose-300 font-bold hover:opacity-90 transition-opacity"
                     onClick={() => {
                       const allAbsent: Record<string, string> = {};
                       studentsList.forEach(s => { allAbsent[s.id] = 'absent'; });
@@ -283,10 +280,10 @@ export default function AttendancePage() {
 
               {studentsLoading ? (
                 <div className="flex items-center justify-center py-10">
-                  <Loader2 className="w-6 h-6 animate-spin" style={{ color: 'var(--color-brand-primary)' }} />
+                  <Loader2 className="w-6 h-6 animate-spin text-blue-600" />
                 </div>
               ) : studentsList.length === 0 ? (
-                <div className="p-6 text-center text-sm" style={{ color: 'var(--text-muted)' }}>
+                <div className="p-6 text-center text-sm font-medium" style={{ color: 'var(--text-muted)' }}>
                   No students found for this institution or subject.
                 </div>
               ) : (
@@ -300,11 +297,11 @@ export default function AttendancePage() {
                         style={{ background: 'var(--bg-input)', borderColor: 'var(--border-default)' }}
                       >
                         <div className="flex items-center gap-3">
-                          <div className="w-8 h-8 rounded-full bg-violet-100 dark:bg-violet-900/30 text-violet-600 dark:text-violet-400 flex items-center justify-center text-xs font-bold shrink-0">
+                          <div className="w-9 h-9 rounded-full bg-gradient-to-tr from-blue-600 to-indigo-700 text-white flex items-center justify-center text-xs font-extrabold shrink-0 shadow-sm">
                             {student.full_name.charAt(0)}
                           </div>
                           <div>
-                            <p className="text-sm font-semibold" style={{ color: 'var(--text-primary)' }}>{student.full_name}</p>
+                            <p className="text-sm font-bold" style={{ color: 'var(--text-primary)' }}>{student.full_name}</p>
                             <p className="text-xs" style={{ color: 'var(--text-muted)' }}>{student.email}</p>
                           </div>
                         </div>
@@ -316,7 +313,7 @@ export default function AttendancePage() {
                               <button
                                 key={status}
                                 type="button"
-                                className={`px-3 py-1 text-xs font-semibold rounded-lg capitalize transition-all ${
+                                className={`px-3 py-1 text-xs font-bold rounded-lg capitalize transition-all ${
                                   isSelected
                                     ? statusColors[status]
                                     : 'bg-[var(--bg-card)] border text-[var(--text-muted)] hover:text-[var(--text-primary)]'
@@ -335,20 +332,20 @@ export default function AttendancePage() {
                 </div>
               )}
 
-              <div className="pt-2 flex justify-end">
+              <div className="pt-3 flex justify-end">
                 <button
                   type="button"
-                  className="btn-primary py-2.5 px-6 flex items-center gap-2"
+                  className="btn-primary py-2.5 px-6 font-bold shadow-md"
                   disabled={markMutation.isPending || studentsList.length === 0}
                   onClick={handleSubmitAttendance}
                 >
                   {markMutation.isPending ? (
                     <>
                       <Loader2 className="w-4 h-4 animate-spin" />
-                      Submitting Attendance...
+                      Submitting...
                     </>
                   ) : (
-                    'Submit & Save Attendance'
+                    'Submit Class Attendance'
                   )}
                 </button>
               </div>
@@ -357,45 +354,44 @@ export default function AttendancePage() {
         </div>
       )}
 
-      {/* ============================================================ */}
       {/* STUDENT / PARENT ATTENDANCE SUMMARY CARDS */}
-      {/* ============================================================ */}
       {!isTeacherOrAdmin && (
         <>
           {summaryLoading ? (
             <div className="flex justify-center py-8">
-              <Loader2 className="w-6 h-6 animate-spin" style={{ color: 'var(--color-brand-primary)' }} />
+              <Loader2 className="w-6 h-6 animate-spin text-blue-600" />
             </div>
           ) : (
             <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-3 gap-4">
               {(isDemoMode ? DEMO_ATTENDANCE_SUMMARY : (summary?.data ?? [])).map((subject: AttendanceSummary) => {
                 const pct = Number(subject.percentage);
                 const color = pct >= 75 ? 'var(--color-success)' : pct >= 60 ? 'var(--color-warning)' : 'var(--color-danger)';
-                const bgColor = pct >= 75 ? 'bg-emerald-50 dark:bg-emerald-900/10' : pct >= 60 ? 'bg-amber-50 dark:bg-amber-900/10' : 'bg-red-50 dark:bg-red-900/10';
+                const isRisk = pct < 75;
 
                 return (
-                  <div key={subject.subject_id} className={`card p-5 ${bgColor}`}>
+                  <div key={subject.subject_id} className="card p-5 relative overflow-hidden">
                     <div className="flex items-start justify-between mb-3">
                       <div>
-                        <h3 className="font-semibold text-sm" style={{ color: 'var(--text-primary)' }}>
+                        <h3 className="font-bold text-sm sm:text-base tracking-tight" style={{ color: 'var(--text-primary)' }}>
                           {subject.subject_name}
                         </h3>
-                        <p className="text-xs" style={{ color: 'var(--text-muted)' }}>{subject.code}</p>
+                        <p className="text-xs font-semibold mt-0.5" style={{ color: 'var(--text-muted)' }}>{subject.code}</p>
                       </div>
-                      <span className="text-2xl font-bold" style={{ color }}>
+                      <span className="text-2xl font-black" style={{ color }}>
                         {pct}%
                       </span>
                     </div>
                     <div className="progress-bar h-2 mb-2">
                       <div className="progress-fill h-full" style={{ width: `${pct}%`, background: color }} />
                     </div>
-                    <p className="text-xs" style={{ color: 'var(--text-muted)' }}>
-                      {subject.attended} / {subject.total} classes attended
+                    <p className="text-xs font-semibold" style={{ color: 'var(--text-muted)' }}>
+                      {subject.attended} / {subject.total} sessions attended
                     </p>
-                    {pct < 75 && (
-                      <p className="text-xs mt-2 font-medium text-red-600 dark:text-red-400 flex items-center gap-1">
-                        <AlertCircle className="w-3.5 h-3.5" /> Below minimum threshold (75%)
-                      </p>
+                    {isRisk && (
+                      <div className="mt-3 p-2 rounded-lg bg-rose-50 dark:bg-rose-950/40 border border-rose-200 dark:border-rose-800/60 flex items-center gap-1.5 text-xs font-bold text-rose-600 dark:text-rose-300">
+                        <AlertCircle className="w-4 h-4 shrink-0" />
+                        <span>Below 75% requirement threshold</span>
+                      </div>
                     )}
                   </div>
                 );
@@ -405,18 +401,16 @@ export default function AttendancePage() {
         </>
       )}
 
-      {/* ============================================================ */}
       {/* RECENT ATTENDANCE RECORDS LOG (FOR ALL ROLES) */}
-      {/* ============================================================ */}
       <div className="card">
         <div className="p-5 border-b flex flex-col sm:flex-row sm:items-center justify-between gap-3" style={{ borderColor: 'var(--border-default)' }}>
           <div>
-            <h2 className="font-semibold text-base" style={{ color: 'var(--text-primary)' }}>Recent Attendance Logs</h2>
-            <p className="text-xs" style={{ color: 'var(--text-muted)' }}>Student-by-student attendance entries per class session</p>
+            <h2 className="font-extrabold text-base tracking-tight" style={{ color: 'var(--text-primary)' }}>Recent Attendance Logs</h2>
+            <p className="text-xs font-medium" style={{ color: 'var(--text-muted)' }}>Detailed session-by-session attendance history</p>
           </div>
           {subjectsList.length > 0 && (
             <select
-              className="input max-w-xs text-xs py-1.5"
+              className="input max-w-xs text-xs py-1.5 font-semibold"
               value={logSubjectFilter}
               onChange={e => setLogSubjectFilter(e.target.value)}
             >
@@ -429,7 +423,7 @@ export default function AttendancePage() {
         </div>
         {recordsLoading ? (
           <div className="flex justify-center py-8">
-            <Loader2 className="w-6 h-6 animate-spin" style={{ color: 'var(--color-brand-primary)' }} />
+            <Loader2 className="w-6 h-6 animate-spin text-blue-600" />
           </div>
         ) : (
           <div className="table-wrapper border-0">
@@ -449,13 +443,13 @@ export default function AttendancePage() {
                   : (records?.data ?? []).filter((r: AttendanceRecord) => !logSubjectFilter || r.subject_name === logSubjectFilter)
                 ).slice(0, 50).map((rec: AttendanceRecord) => (
                   <tr key={rec.id}>
-                    <td className="font-semibold text-sm" style={{ color: 'var(--text-primary)' }}>
+                    <td className="font-bold text-sm" style={{ color: 'var(--text-primary)' }}>
                       {rec.student_name ?? user?.full_name ?? 'Student'}
                     </td>
-                    <td className="font-medium">{rec.subject_name} <span style={{ color: 'var(--text-muted)' }}>({rec.subject_code})</span></td>
-                    <td>{new Date(rec.date).toLocaleDateString('en-IN')}</td>
+                    <td className="font-semibold">{rec.subject_name} <span style={{ color: 'var(--text-muted)' }}>({rec.subject_code})</span></td>
+                    <td className="font-medium">{new Date(rec.date).toLocaleDateString('en-IN')}</td>
                     <td>
-                      <span className={`badge ${statusColors[rec.status] || ''} capitalize font-semibold`}>
+                      <span className={`badge ${statusColors[rec.status] || ''} capitalize font-bold`}>
                         {rec.status}
                       </span>
                     </td>
@@ -464,7 +458,7 @@ export default function AttendancePage() {
                 ))}
                 {!(isDemoMode ? DEMO_ATTENDANCE_RECORDS.length : records?.data?.length) && (
                   <tr>
-                    <td colSpan={5} className="text-center py-8" style={{ color: 'var(--text-muted)' }}>
+                    <td colSpan={5} className="text-center py-8 font-medium" style={{ color: 'var(--text-muted)' }}>
                       No attendance records found
                     </td>
                   </tr>

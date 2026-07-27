@@ -13,16 +13,16 @@ function DemoBanner() {
 
   return (
     <div
-      className="flex items-center justify-center gap-2 py-2 px-4 text-xs font-medium"
+      className="flex items-center justify-center gap-2 py-2 px-4 text-xs font-semibold tracking-wide border-b border-amber-500/20"
       style={{
-        background: 'linear-gradient(90deg, hsl(246,75%,50%), hsl(286,75%,50%))',
-        color: 'white',
+        background: 'linear-gradient(90deg, #1e3a8a, #0f172a)',
+        color: '#fef08a',
       }}
       role="status"
       aria-label="Demo mode active"
     >
-      <FlaskConical className="w-3 h-3" aria-hidden="true" />
-      Demo Mode — UI preview only. Connect Supabase + Groq to enable live data.
+      <FlaskConical className="w-3.5 h-3.5 text-amber-400 shrink-0" aria-hidden="true" />
+      <span>Demo Mode Active — Interactive UI preview with pre-populated demo data.</span>
     </div>
   );
 }
@@ -41,14 +41,13 @@ function AuthGuard({ children }: { children: React.ReactNode }) {
     return (
       <div className="min-h-screen flex items-center justify-center" style={{ background: 'var(--bg-page)' }}>
         <div className="text-center">
-          <div
-            className="w-12 h-12 rounded-2xl flex items-center justify-center text-white text-xl font-bold mx-auto mb-4"
-            style={{ background: 'linear-gradient(135deg, var(--color-brand-primary), hsl(286, 75%, 60%))' }}
-          >
+          <div className="w-12 h-12 rounded-2xl flex items-center justify-center text-white text-2xl font-bold mx-auto mb-4 bg-gradient-to-br from-blue-600 to-indigo-800 shadow-xl border border-blue-400/30">
             C
           </div>
           <div className="spinner w-6 h-6 mx-auto" style={{ color: 'var(--color-brand-primary)' }} />
-          <p className="text-sm mt-3" style={{ color: 'var(--text-muted)' }}>Loading CampusFlow...</p>
+          <p className="text-xs font-semibold mt-3 tracking-wider uppercase" style={{ color: 'var(--text-muted)' }}>
+            Loading CampusFlow...
+          </p>
         </div>
       </div>
     );
@@ -62,11 +61,11 @@ function AuthGuard({ children }: { children: React.ReactNode }) {
       <div className="flex flex-1 min-h-0">
         <Sidebar />
         <main
-          className="flex-1 min-w-0"
+          className="flex-1 min-w-0 transition-all duration-200"
           style={{ paddingLeft: 'var(--sidebar-width)' }}
           id="main-content"
         >
-          <div className="p-4 lg:p-8 max-w-7xl mx-auto">
+          <div className="p-4 sm:p-6 lg:p-8 max-w-7xl mx-auto">
             {children}
           </div>
         </main>

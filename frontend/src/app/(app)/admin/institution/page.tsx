@@ -26,7 +26,6 @@ export default function AdminInstitutionPage() {
     queryFn: (): Promise<Institution> => api.get('/admin/institution').then(r => r.data as Institution),
   });
 
-  // Sync form when data loads (React Query v5 removed onSuccess)
   useEffect(() => {
     if (institution) {
       setForm({ name: institution.name, attendanceThreshold: institution.attendance_threshold });
@@ -50,7 +49,7 @@ export default function AdminInstitutionPage() {
   if (isLoading) {
     return (
       <div className="flex items-center justify-center py-24">
-        <Loader2 className="w-8 h-8 animate-spin" style={{ color: 'var(--color-brand-primary)' }} />
+        <Loader2 className="w-8 h-8 animate-spin text-blue-600" />
       </div>
     );
   }
@@ -59,19 +58,18 @@ export default function AdminInstitutionPage() {
     <div className="space-y-6 animate-fade-in max-w-2xl">
       <div className="page-header">
         <h1 className="page-title flex items-center gap-2">
-          <Building2 className="w-6 h-6" style={{ color: 'var(--color-brand-primary)' }} />
+          <Building2 className="w-7 h-7 text-blue-600 dark:text-blue-400" />
           Institution Settings
         </h1>
-        <p className="page-subtitle">Configure your institution's global settings</p>
+        <p className="page-subtitle">Configure global institution settings and attendance risk thresholds.</p>
       </div>
 
-      <div className="card p-6 space-y-6">
+      <div className="card p-6 space-y-6 shadow-sm">
         {/* Info banner */}
-        <div className="flex items-start gap-3 rounded-lg p-4" style={{ background: 'var(--bg-badge)' }}>
-          <Info className="w-4 h-4 mt-0.5 shrink-0" style={{ color: 'var(--color-brand-primary)' }} />
-          <p className="text-sm" style={{ color: 'var(--text-secondary)' }}>
-            These settings apply institution-wide. Attendance threshold controls when automatic
-            WhatsApp risk alerts are sent to students and parents.
+        <div className="flex items-start gap-3 rounded-xl p-4 bg-blue-50/80 dark:bg-blue-950/40 border border-blue-200 dark:border-blue-800/60">
+          <Info className="w-5 h-5 text-blue-600 dark:text-blue-400 mt-0.5 shrink-0" />
+          <p className="text-xs sm:text-sm font-medium text-blue-900 dark:text-blue-200">
+            Attendance threshold controls when automated WhatsApp risk alerts trigger for student and parent profiles.
           </p>
         </div>
 
@@ -81,12 +79,12 @@ export default function AdminInstitutionPage() {
           {editing ? (
             <input
               id="inst-name"
-              className="input"
+              className="input font-semibold"
               value={form.name}
               onChange={e => setForm(p => ({ ...p, name: e.target.value }))}
             />
           ) : (
-            <p className="text-sm font-medium py-2" style={{ color: 'var(--text-primary)' }}>
+            <p className="text-base font-extrabold py-1" style={{ color: 'var(--text-primary)' }}>
               {institution?.name ?? '—'}
             </p>
           )}
@@ -95,7 +93,7 @@ export default function AdminInstitutionPage() {
         {/* Domain */}
         <div>
           <label className="label">Domain</label>
-          <p className="text-sm py-2" style={{ color: 'var(--text-muted)' }}>
+          <p className="text-sm font-medium py-1" style={{ color: 'var(--text-muted)' }}>
             {institution?.domain ?? 'Not configured'}
           </p>
         </div>
@@ -110,30 +108,30 @@ export default function AdminInstitutionPage() {
               <input
                 id="inst-threshold"
                 type="number"
-                className="input"
+                className="input font-bold"
                 min={0}
                 max={100}
                 value={form.attendanceThreshold}
                 onChange={e => setForm(p => ({ ...p, attendanceThreshold: parseInt(e.target.value, 10) || 75 }))}
               />
-              <p className="text-xs" style={{ color: 'var(--text-muted)' }}>
-                Students below this % attendance will receive WhatsApp risk alerts.
+              <p className="text-xs font-medium" style={{ color: 'var(--text-muted)' }}>
+                Students below this percentage will be flagged as at-risk.
               </p>
             </div>
           ) : (
             <div className="flex items-center gap-3">
-              <span className="text-2xl font-bold" style={{ color: institution && institution.attendance_threshold < 75 ? 'var(--color-warning)' : 'var(--color-brand-primary)' }}>
+              <span className="text-3xl font-black" style={{ color: institution && institution.attendance_threshold < 75 ? 'var(--color-warning)' : 'var(--color-brand-primary)' }}>
                 {institution?.attendance_threshold ?? 75}%
               </span>
-              <span className="text-sm" style={{ color: 'var(--text-muted)' }}>threshold</span>
+              <span className="text-xs font-bold uppercase tracking-wider text-slate-400">threshold</span>
             </div>
           )}
         </div>
 
         {/* Created at */}
         <div>
-          <label className="label">Created</label>
-          <p className="text-sm py-2" style={{ color: 'var(--text-muted)' }}>
+          <label className="label">Created Date</label>
+          <p className="text-sm font-medium py-1" style={{ color: 'var(--text-muted)' }}>
             {institution?.created_at
               ? new Date(institution.created_at).toLocaleDateString('en-IN', { year: 'numeric', month: 'long', day: 'numeric' })
               : '—'}
@@ -141,12 +139,12 @@ export default function AdminInstitutionPage() {
         </div>
 
         {/* Actions */}
-        <div className="flex gap-3 pt-2">
+        <div className="flex gap-3 pt-3 border-t" style={{ borderColor: 'var(--border-default)' }}>
           {editing ? (
             <>
-              <button className="btn-secondary" onClick={() => setEditing(false)}>Cancel</button>
+              <button className="btn-secondary flex-1" onClick={() => setEditing(false)}>Cancel</button>
               <button
-                className="btn-primary gap-2"
+                className="btn-primary flex-1 font-bold gap-2 shadow-md"
                 disabled={updateMutation.isPending || !form.name.trim()}
                 onClick={() => updateMutation.mutate(form)}
               >
@@ -155,7 +153,7 @@ export default function AdminInstitutionPage() {
               </button>
             </>
           ) : (
-            <button className="btn-secondary" onClick={() => setEditing(true)}>
+            <button className="btn-secondary font-bold" onClick={() => setEditing(true)}>
               Edit Settings
             </button>
           )}

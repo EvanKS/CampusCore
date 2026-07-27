@@ -97,34 +97,31 @@ export default function StudyGroupsPage() {
 
   const groups: StudyGroup[] = data?.data ?? [];
 
-  const _isMember = (_g: StudyGroup) =>
-    (detail as GroupDetail | undefined)?.members?.some(m => m.id === user?.id) ?? false;
-
   return (
     <div className="space-y-6 animate-fade-in">
-      <div className="flex items-start justify-between page-header">
-        <div>
+      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+        <div className="page-header mb-0">
           <h1 className="page-title flex items-center gap-2">
-            <UsersRound className="w-6 h-6" style={{ color: 'var(--color-brand-primary)' }} />
+            <UsersRound className="w-7 h-7 text-blue-600 dark:text-blue-400" />
             Study Groups
           </h1>
-          <p className="page-subtitle">Collaborate with peers, schedule sessions, share meet links</p>
+          <p className="page-subtitle">Collaborate with peers, schedule joint sessions, and share meeting links.</p>
         </div>
         {user?.role === 'student' && (
-          <button className="btn-primary" onClick={() => setShowForm(p => !p)}>
+          <button className="btn-primary shrink-0 shadow-md" onClick={() => setShowForm(p => !p)}>
             <Plus className="w-4 h-4" />
-            New Group
+            Create Group
           </button>
         )}
       </div>
 
       {/* Create group form */}
       {showForm && (
-        <div className="card p-5 space-y-4 animate-slide-up">
-          <div className="flex items-center justify-between">
-            <h2 className="font-semibold" style={{ color: 'var(--text-primary)' }}>Create Study Group</h2>
-            <button className="btn-ghost p-1.5" onClick={() => setShowForm(false)} aria-label="Close form">
-              <X className="w-4 h-4" />
+        <div className="card p-6 space-y-4 animate-slide-up shadow-xl">
+          <div className="flex items-center justify-between border-b pb-3" style={{ borderColor: 'var(--border-default)' }}>
+            <h2 className="font-extrabold text-lg" style={{ color: 'var(--text-primary)' }}>Create Study Group</h2>
+            <button className="btn-ghost p-1" onClick={() => setShowForm(false)} aria-label="Close form">
+              <X className="w-5 h-5" />
             </button>
           </div>
 
@@ -133,8 +130,8 @@ export default function StudyGroupsPage() {
               <label className="label" htmlFor="group-name">Group Name *</label>
               <input
                 id="group-name"
-                className="input"
-                placeholder="e.g. DSA Morning Crew"
+                className="input font-semibold"
+                placeholder="e.g. DSA Morning Practice Group"
                 value={form.name}
                 onChange={e => setForm(p => ({ ...p, name: e.target.value }))}
               />
@@ -144,7 +141,7 @@ export default function StudyGroupsPage() {
               <input
                 id="group-max"
                 type="number"
-                className="input"
+                className="input font-semibold"
                 min={2}
                 max={50}
                 value={form.maxMembers}
@@ -157,9 +154,9 @@ export default function StudyGroupsPage() {
             <label className="label" htmlFor="group-desc">Description</label>
             <textarea
               id="group-desc"
-              className="input"
+              className="input font-medium"
               rows={3}
-              placeholder="What will this group focus on?"
+              placeholder="Target topics, schedule, or group rules..."
               value={form.description}
               onChange={e => setForm(p => ({ ...p, description: e.target.value }))}
             />
@@ -169,17 +166,17 @@ export default function StudyGroupsPage() {
             <label className="label" htmlFor="group-meet">Google Meet Link (optional)</label>
             <input
               id="group-meet"
-              className="input"
+              className="input font-medium"
               placeholder="https://meet.google.com/..."
               value={form.googleMeetLink}
               onChange={e => setForm(p => ({ ...p, googleMeetLink: e.target.value }))}
             />
           </div>
 
-          <div className="flex gap-3 justify-end">
-            <button className="btn-secondary" onClick={() => setShowForm(false)}>Cancel</button>
+          <div className="flex gap-3 justify-end pt-2">
+            <button className="btn-secondary flex-1 sm:flex-none" onClick={() => setShowForm(false)}>Cancel</button>
             <button
-              className="btn-primary"
+              className="btn-primary flex-1 sm:flex-none font-bold"
               disabled={!form.name.trim() || createMutation.isPending}
               onClick={() => createMutation.mutate(form)}
             >
@@ -192,14 +189,14 @@ export default function StudyGroupsPage() {
       {/* Group list */}
       {isLoading ? (
         <div className="flex items-center justify-center py-16">
-          <Loader2 className="w-8 h-8 animate-spin" style={{ color: 'var(--color-brand-primary)' }} />
+          <Loader2 className="w-8 h-8 animate-spin text-blue-600" />
         </div>
       ) : groups.length === 0 ? (
         <div className="card p-16 text-center">
-          <UsersRound className="w-12 h-12 mx-auto mb-3" style={{ color: 'var(--text-muted)' }} />
-          <p className="font-medium" style={{ color: 'var(--text-primary)' }}>No study groups yet</p>
+          <UsersRound className="w-12 h-12 mx-auto mb-3 text-slate-400" />
+          <p className="font-bold text-base" style={{ color: 'var(--text-primary)' }}>No study groups active</p>
           <p className="text-sm mt-1" style={{ color: 'var(--text-muted)' }}>
-            Be the first to create one for your class!
+            Click "Create Group" to start a peer study session.
           </p>
         </div>
       ) : (
@@ -211,44 +208,41 @@ export default function StudyGroupsPage() {
             const full = Number(g.member_count) >= g.max_members;
 
             return (
-              <div key={g.id} className="card overflow-hidden">
+              <div key={g.id} className="card overflow-hidden transition-all hover:border-blue-500/50">
                 <button
                   className="w-full flex items-center justify-between p-5 text-left hover:bg-[var(--bg-card-hover)] transition-colors"
                   onClick={() => setExpandedId(isExpanded ? null : g.id)}
                   aria-expanded={isExpanded}
                 >
                   <div className="flex items-start gap-4 min-w-0">
-                    <div
-                      className="w-10 h-10 rounded-xl flex items-center justify-center text-white font-bold text-sm shrink-0"
-                      style={{ background: 'linear-gradient(135deg, var(--color-brand-primary), hsl(286,75%,60%))' }}
-                    >
+                    <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-blue-600 to-indigo-800 text-white font-extrabold text-sm flex items-center justify-center shrink-0 shadow-md">
                       {g.name.charAt(0).toUpperCase()}
                     </div>
                     <div className="min-w-0">
-                      <p className="font-semibold text-sm truncate" style={{ color: 'var(--text-primary)' }}>{g.name}</p>
-                      <div className="flex items-center flex-wrap gap-3 mt-1">
+                      <p className="font-extrabold text-base tracking-tight truncate" style={{ color: 'var(--text-primary)' }}>{g.name}</p>
+                      <div className="flex items-center flex-wrap gap-2.5 mt-1">
                         {g.subject_name && (
-                          <span className="badge badge-brand">{g.subject_name}</span>
+                          <span className="badge badge-brand font-bold">{g.subject_name}</span>
                         )}
-                        <span className="flex items-center gap-1 text-xs" style={{ color: 'var(--text-muted)' }}>
-                          <Users className="w-3 h-3" />
-                          {g.member_count}/{g.max_members}
+                        <span className="flex items-center gap-1 text-xs font-semibold" style={{ color: 'var(--text-muted)' }}>
+                          <Users className="w-3.5 h-3.5 text-blue-500" />
+                          {g.member_count}/{g.max_members} members
                           {full && <span className="badge badge-warning ml-1">Full</span>}
                         </span>
-                        <span className="text-xs" style={{ color: 'var(--text-muted)' }}>by {g.creator_name}</span>
+                        <span className="text-xs font-medium" style={{ color: 'var(--text-muted)' }}>by {g.creator_name}</span>
                       </div>
                     </div>
                   </div>
                   {isExpanded
-                    ? <ChevronUp className="w-4 h-4 shrink-0" style={{ color: 'var(--text-muted)' }} />
-                    : <ChevronDown className="w-4 h-4 shrink-0" style={{ color: 'var(--text-muted)' }} />
+                    ? <ChevronUp className="w-5 h-5 shrink-0 text-slate-400" />
+                    : <ChevronDown className="w-5 h-5 shrink-0 text-slate-400" />
                   }
                 </button>
 
                 {isExpanded && (
-                  <div className="border-t px-5 pb-5 pt-4 space-y-4 animate-slide-up" style={{ borderColor: 'var(--border-default)' }}>
+                  <div className="border-t px-5 pb-5 pt-4 space-y-4 animate-slide-up bg-slate-50/50 dark:bg-slate-900/30" style={{ borderColor: 'var(--border-default)' }}>
                     {g.description && (
-                      <p className="text-sm" style={{ color: 'var(--text-secondary)' }}>{g.description}</p>
+                      <p className="text-sm font-medium" style={{ color: 'var(--text-secondary)' }}>{g.description}</p>
                     )}
 
                     <div className="flex flex-wrap gap-3">
@@ -257,16 +251,16 @@ export default function StudyGroupsPage() {
                           href={g.google_meet_link}
                           target="_blank"
                           rel="noopener noreferrer"
-                          className="btn-secondary text-sm gap-2"
+                          className="btn-secondary text-xs font-bold gap-2 text-blue-600 hover:text-blue-700"
                         >
-                          <Video className="w-4 h-4" />
-                          Join Meet
+                          <Video className="w-4 h-4 text-blue-600" />
+                          Join Google Meet
                         </a>
                       )}
                       {user?.role === 'student' && (
                         isMemberOfGroup ? (
                           <button
-                            className="btn-secondary text-sm gap-2 text-red-500"
+                            className="btn-secondary text-xs font-bold gap-2 text-rose-600 hover:bg-rose-50 dark:hover:bg-rose-950/40"
                             disabled={leaveMutation.isPending}
                             onClick={() => leaveMutation.mutate(g.id)}
                           >
@@ -278,7 +272,7 @@ export default function StudyGroupsPage() {
                           </button>
                         ) : (
                           <button
-                            className="btn-primary text-sm gap-2"
+                            className="btn-primary text-xs font-bold gap-2"
                             disabled={joinMutation.isPending || full}
                             onClick={() => joinMutation.mutate(g.id)}
                           >
@@ -286,34 +280,31 @@ export default function StudyGroupsPage() {
                               ? <Loader2 className="w-4 h-4 animate-spin" />
                               : <LogIn className="w-4 h-4" />
                             }
-                            {full ? 'Group Full' : 'Join Group'}
+                            {full ? 'Group Full' : 'Join Study Group'}
                           </button>
                         )
                       )}
                     </div>
 
-                    {/* Members */}
+                    {/* Members List */}
                     <div>
-                      <p className="text-xs font-semibold uppercase tracking-wide mb-2" style={{ color: 'var(--text-muted)' }}>
-                        Members ({groupDetail?.members?.length ?? 0})
+                      <p className="text-xs font-bold uppercase tracking-wider mb-2" style={{ color: 'var(--text-muted)' }}>
+                        Group Roster ({groupDetail?.members?.length ?? 0})
                       </p>
                       {detailLoading ? (
-                        <Loader2 className="w-4 h-4 animate-spin" style={{ color: 'var(--text-muted)' }} />
+                        <Loader2 className="w-4 h-4 animate-spin text-blue-600" />
                       ) : (
                         <div className="flex flex-wrap gap-2">
                           {groupDetail?.members?.map(m => (
-                            <div key={m.id} className="flex items-center gap-1.5 rounded-full px-3 py-1" style={{ background: 'var(--bg-input)' }}>
-                              <div
-                                className="w-5 h-5 rounded-full flex items-center justify-center text-white text-xs font-bold shrink-0"
-                                style={{ background: 'var(--color-brand-primary)' }}
-                              >
+                            <div key={m.id} className="flex items-center gap-1.5 rounded-full px-3 py-1 bg-[var(--bg-card)] border border-[var(--border-default)] shadow-sm">
+                              <div className="w-5 h-5 rounded-full bg-gradient-to-tr from-blue-600 to-indigo-700 text-white text-[10px] font-extrabold flex items-center justify-center shrink-0">
                                 {m.full_name.charAt(0)}
                               </div>
-                              <span className="text-xs" style={{ color: 'var(--text-primary)' }}>{m.full_name}</span>
+                              <span className="text-xs font-semibold" style={{ color: 'var(--text-primary)' }}>{m.full_name}</span>
                             </div>
                           ))}
                           {!groupDetail?.members?.length && (
-                            <p className="text-xs" style={{ color: 'var(--text-muted)' }}>No members yet</p>
+                            <p className="text-xs font-medium" style={{ color: 'var(--text-muted)' }}>No members joined yet</p>
                           )}
                         </div>
                       )}
@@ -321,11 +312,11 @@ export default function StudyGroupsPage() {
 
                     {g.meeting_schedule && Object.keys(g.meeting_schedule).length > 0 && (
                       <div>
-                        <p className="text-xs font-semibold uppercase tracking-wide mb-2" style={{ color: 'var(--text-muted)' }}>
-                          <Calendar className="w-3 h-3 inline mr-1" />
-                          Schedule
+                        <p className="text-xs font-bold uppercase tracking-wider mb-1" style={{ color: 'var(--text-muted)' }}>
+                          <Calendar className="w-3.5 h-3.5 inline mr-1 text-blue-500" />
+                          Meeting Schedule
                         </p>
-                        <p className="text-sm" style={{ color: 'var(--text-secondary)' }}>
+                        <p className="text-xs font-semibold" style={{ color: 'var(--text-secondary)' }}>
                           {JSON.stringify(g.meeting_schedule)}
                         </p>
                       </div>

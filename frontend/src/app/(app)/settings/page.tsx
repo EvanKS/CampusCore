@@ -81,16 +81,15 @@ export default function SettingsPage() {
     <div className="space-y-6 animate-fade-in max-w-2xl">
       <div className="page-header">
         <h1 className="page-title flex items-center gap-2">
-          <Settings className="w-6 h-6" style={{ color: 'var(--color-brand-primary)' }} />
-          Settings
+          <Settings className="w-7 h-7 text-blue-600 dark:text-blue-400" />
+          User Account Settings
         </h1>
-        <p className="page-subtitle">Manage your account preferences</p>
+        <p className="page-subtitle">Manage personal profile details, preferences, and password security.</p>
       </div>
 
       {/* Tab switcher */}
       <div
-        className="flex gap-1 p-1 rounded-xl"
-        style={{ background: 'var(--bg-input)' }}
+        className="flex gap-1.5 p-1.5 rounded-2xl bg-[var(--bg-input)] border border-[var(--border-default)]"
         role="tablist"
       >
         {tabs.map(t => (
@@ -98,10 +97,11 @@ export default function SettingsPage() {
             key={t.id}
             role="tab"
             aria-selected={tab === t.id}
-            className={`flex-1 flex items-center justify-center gap-2 py-2 rounded-lg text-sm font-medium transition-all ${
-              tab === t.id ? 'bg-[var(--bg-card)] shadow-sm' : 'hover:bg-[var(--bg-card-hover)]'
+            className={`flex-1 flex items-center justify-center gap-2 py-2.5 rounded-xl text-xs sm:text-sm font-bold transition-all ${
+              tab === t.id
+                ? 'bg-blue-600 text-white shadow-md'
+                : 'text-[var(--text-secondary)] hover:text-[var(--text-primary)] hover:bg-[var(--bg-card-hover)]'
             }`}
-            style={{ color: tab === t.id ? 'var(--color-brand-primary)' : 'var(--text-secondary)' }}
             onClick={() => setTab(t.id)}
           >
             {t.icon}
@@ -112,19 +112,15 @@ export default function SettingsPage() {
 
       {/* Profile tab */}
       {tab === 'profile' && (
-        <div className="card p-6 space-y-5 animate-fade-in">
+        <div className="card p-6 space-y-5 animate-fade-in shadow-sm">
           {/* Avatar */}
-          <div className="flex items-center gap-4">
-            <div
-              className="w-16 h-16 rounded-full flex items-center justify-center text-white text-2xl font-bold"
-              style={{ background: 'linear-gradient(135deg, var(--color-brand-primary), hsl(286,75%,60%))' }}
-              aria-hidden="true"
-            >
+          <div className="flex items-center gap-4 border-b pb-4" style={{ borderColor: 'var(--border-default)' }}>
+            <div className="w-16 h-16 rounded-full bg-gradient-to-tr from-blue-600 to-indigo-800 text-white text-2xl font-extrabold flex items-center justify-center shrink-0 shadow-md">
               {user?.full_name.charAt(0).toUpperCase()}
             </div>
             <div>
-              <p className="font-semibold" style={{ color: 'var(--text-primary)' }}>{user?.full_name}</p>
-              <p className="text-sm capitalize" style={{ color: 'var(--text-muted)' }}>{user?.role}</p>
+              <p className="font-extrabold text-base sm:text-lg" style={{ color: 'var(--text-primary)' }}>{user?.full_name}</p>
+              <p className="text-xs font-bold uppercase tracking-wider text-blue-600 dark:text-blue-400">{user?.role} Role</p>
             </div>
           </div>
 
@@ -132,81 +128,81 @@ export default function SettingsPage() {
             <label className="label" htmlFor="settings-name">Full Name</label>
             <input
               id="settings-name"
-              className="input"
+              className="input font-semibold"
               value={profile.fullName}
               onChange={e => setProfile(p => ({ ...p, fullName: e.target.value }))}
             />
           </div>
 
           <div>
-            <label className="label" htmlFor="settings-email">Email</label>
+            <label className="label" htmlFor="settings-email">Email Address</label>
             <input
               id="settings-email"
-              className="input"
+              className="input font-medium opacity-70 cursor-not-allowed"
               value={user?.email ?? ''}
               disabled
               aria-describedby="email-note"
             />
-            <p id="email-note" className="text-xs mt-1" style={{ color: 'var(--text-muted)' }}>Email cannot be changed</p>
+            <p id="email-note" className="text-xs mt-1 font-medium" style={{ color: 'var(--text-muted)' }}>Email address is managed by your institution administrator</p>
           </div>
 
           <div>
-            <label className="label" htmlFor="settings-phone">Phone (WhatsApp)</label>
+            <label className="label" htmlFor="settings-phone">Phone Number (for WhatsApp Alerts)</label>
             <input
               id="settings-phone"
               type="tel"
-              className="input"
-              placeholder="+91 9876543210"
+              className="input font-semibold"
+              placeholder="+91 98765 43210"
               value={profile.phone}
               onChange={e => setProfile(p => ({ ...p, phone: e.target.value }))}
             />
           </div>
 
           <button
-            className="btn-primary gap-2"
+            className="btn-primary font-bold gap-2 shadow-md"
             disabled={updateProfileMutation.isPending || !profile.fullName.trim()}
             onClick={() => updateProfileMutation.mutate(profile)}
           >
             {updateProfileMutation.isPending ? <Loader2 className="w-4 h-4 animate-spin" /> : <Save className="w-4 h-4" />}
-            Save Profile
+            Save Profile Changes
           </button>
         </div>
       )}
 
       {/* Notifications tab */}
       {tab === 'notifications' && (
-        <div className="card p-6 space-y-5 animate-fade-in">
-          <h2 className="font-semibold" style={{ color: 'var(--text-primary)' }}>Notification Channels</h2>
-          <p className="text-sm" style={{ color: 'var(--text-secondary)' }}>
-            Choose how you receive reminders, alerts, and notices.
+        <div className="card p-6 space-y-5 animate-fade-in shadow-sm">
+          <h2 className="font-extrabold text-lg" style={{ color: 'var(--text-primary)' }}>Notification Channels</h2>
+          <p className="text-xs sm:text-sm font-medium" style={{ color: 'var(--text-secondary)' }}>
+            Toggle channels through which you receive task reminders, attendance alerts, and notices.
           </p>
 
           {(
             [
-              { key: 'email' as const, label: 'Email Notifications', desc: 'Receive updates via email' },
-              { key: 'whatsapp' as const, label: 'WhatsApp Notifications', desc: 'Receive reminders via WhatsApp' },
-              { key: 'in_app' as const, label: 'In-App Notifications', desc: 'Show notifications inside CampusFlow' },
+              { key: 'email' as const, label: 'Email Notifications', desc: 'Receive daily digests & critical notice dispatches' },
+              { key: 'whatsapp' as const, label: 'WhatsApp Notifications', desc: 'Receive instant task reminders & low attendance warnings' },
+              { key: 'in_app' as const, label: 'In-App Notifications', desc: 'Display badge notifications inside CampusFlow' },
             ] as const
           ).map(({ key, label, desc }) => (
-            <div key={key} className="flex items-center justify-between p-4 rounded-lg" style={{ background: 'var(--bg-input)' }}>
+            <div key={key} className="flex items-center justify-between p-4 rounded-xl border border-[var(--border-default)]" style={{ background: 'var(--bg-input)' }}>
               <div>
-                <p className="font-medium text-sm" style={{ color: 'var(--text-primary)' }}>{label}</p>
-                <p className="text-xs" style={{ color: 'var(--text-muted)' }}>{desc}</p>
+                <p className="font-bold text-sm" style={{ color: 'var(--text-primary)' }}>{label}</p>
+                <p className="text-xs font-medium" style={{ color: 'var(--text-muted)' }}>{desc}</p>
               </div>
               <button
                 role="switch"
                 aria-checked={currentPrefs[key]}
                 aria-label={label}
-                className={`relative inline-flex w-11 h-6 items-center rounded-full transition-colors ${
-                  currentPrefs[key] ? 'bg-[var(--color-brand-primary)]' : 'bg-[var(--border-default)]'
+                className={`relative inline-flex w-12 h-6 items-center rounded-full transition-colors cursor-pointer ${
+                  currentPrefs[key] ? 'bg-blue-600' : 'bg-slate-300 dark:bg-slate-700'
                 }`}
                 onClick={() =>
                   updatePrefsMutation.mutate({ ...currentPrefs, [key]: !currentPrefs[key] })
                 }
               >
                 <span
-                  className={`inline-block w-4 h-4 rounded-full bg-white shadow transition-transform ${
-                    currentPrefs[key] ? 'translate-x-6' : 'translate-x-1'
+                  className={`inline-block w-4 h-4 rounded-full bg-white shadow-md transition-transform ${
+                    currentPrefs[key] ? 'translate-x-7' : 'translate-x-1'
                   }`}
                 />
               </button>
@@ -217,8 +213,8 @@ export default function SettingsPage() {
 
       {/* Security tab */}
       {tab === 'security' && (
-        <div className="card p-6 space-y-5 animate-fade-in">
-          <h2 className="font-semibold" style={{ color: 'var(--text-primary)' }}>Change Password</h2>
+        <div className="card p-6 space-y-5 animate-fade-in shadow-sm">
+          <h2 className="font-extrabold text-lg" style={{ color: 'var(--text-primary)' }}>Security & Password</h2>
 
           <div>
             <label className="label" htmlFor="curr-pass">Current Password</label>
@@ -226,14 +222,14 @@ export default function SettingsPage() {
               <input
                 id="curr-pass"
                 type={showPassword ? 'text' : 'password'}
-                className="input pr-10"
+                className="input pr-10 font-medium"
                 value={passwords.current}
                 onChange={e => setPasswords(p => ({ ...p, current: e.target.value }))}
                 autoComplete="current-password"
               />
               <button
                 type="button"
-                className="absolute right-3 top-1/2 -translate-y-1/2 btn-ghost p-0"
+                className="absolute right-3 top-1/2 -translate-y-1/2 text-slate-400 p-1"
                 onClick={() => setShowPassword(p => !p)}
                 aria-label={showPassword ? 'Hide password' : 'Show password'}
               >
@@ -247,7 +243,7 @@ export default function SettingsPage() {
             <input
               id="new-pass"
               type="password"
-              className="input"
+              className="input font-medium"
               value={passwords.next}
               onChange={e => setPasswords(p => ({ ...p, next: e.target.value }))}
               autoComplete="new-password"
@@ -259,18 +255,18 @@ export default function SettingsPage() {
             <input
               id="confirm-pass"
               type="password"
-              className="input"
+              className="input font-medium"
               value={passwords.confirm}
               onChange={e => setPasswords(p => ({ ...p, confirm: e.target.value }))}
               autoComplete="new-password"
             />
             {passwords.next && passwords.confirm && passwords.next !== passwords.confirm && (
-              <p className="text-xs mt-1" style={{ color: 'var(--color-danger)' }}>Passwords do not match</p>
+              <p className="text-xs font-semibold mt-1 text-rose-500">Passwords do not match</p>
             )}
           </div>
 
           <button
-            className="btn-primary gap-2"
+            className="btn-primary font-bold gap-2 shadow-md"
             disabled={
               changePasswordMutation.isPending ||
               !passwords.current ||
@@ -285,10 +281,10 @@ export default function SettingsPage() {
           </button>
 
           <div className="border-t pt-4" style={{ borderColor: 'var(--border-default)' }}>
-            <h3 className="font-medium mb-2" style={{ color: 'var(--text-primary)' }}>Session</h3>
+            <h3 className="font-bold text-sm mb-2" style={{ color: 'var(--text-primary)' }}>Active Session</h3>
             <button
-              className="btn-secondary text-red-500 border-red-200 dark:border-red-900/30"
-              onClick={() => { if (confirm('Sign out from all devices?')) logout(); }}
+              className="btn-secondary font-bold text-rose-600 dark:text-rose-400 border-rose-200 dark:border-rose-900/40 hover:bg-rose-50 dark:hover:bg-rose-950/30"
+              onClick={() => { if (confirm('Sign out from this device session?')) logout(); }}
             >
               Sign Out
             </button>

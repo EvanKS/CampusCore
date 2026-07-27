@@ -5,72 +5,78 @@
 @tailwind utilities;
 
 /* ============================================================
-   CSS Custom Properties (Design Tokens)
-   CSS-variable based theming — persisted per user via next-themes
+   CampusFlow Academic Design System (Design Tokens)
    ============================================================ */
 :root {
-  /* Brand */
-  --color-brand-primary: hsl(246, 75%, 58%);
-  --color-brand-secondary: hsl(246, 67%, 50%);
-  --color-brand-light: hsl(246, 100%, 97%);
+  /* Brand Palette - Deep Academic Blue & Teal Accent */
+  --color-brand-primary: hsl(217, 91%, 48%);
+  --color-brand-secondary: hsl(220, 85%, 36%);
+  --color-brand-light: hsl(217, 91%, 96%);
 
   /* Surfaces */
-  --bg-page: hsl(220, 20%, 97%);
+  --bg-page: hsl(210, 24%, 97%);
   --bg-card: hsl(0, 0%, 100%);
-  --bg-card-hover: hsl(220, 20%, 98%);
-  --bg-sidebar: hsl(0, 0%, 100%);
-  --bg-input: hsl(220, 20%, 97%);
-  --bg-badge: hsl(246, 100%, 97%);
+  --bg-card-hover: hsl(210, 20%, 96%);
+  --bg-sidebar: hsl(222, 47%, 10%);
+  --bg-input: hsl(210, 20%, 96%);
+  --bg-badge: hsl(217, 91%, 95%);
 
   /* Borders */
-  --border-default: hsl(220, 13%, 91%);
-  --border-focus: hsl(246, 75%, 58%);
+  --border-default: hsl(214, 25%, 88%);
+  --border-focus: hsl(217, 91%, 50%);
+  --border-subtle: hsl(214, 20%, 92%);
 
   /* Text */
   --text-primary: hsl(222, 47%, 11%);
-  --text-secondary: hsl(215, 16%, 47%);
-  --text-muted: hsl(215, 20%, 65%);
-  --text-brand: hsl(246, 67%, 50%);
+  --text-secondary: hsl(215, 20%, 40%);
+  --text-muted: hsl(215, 16%, 58%);
+  --text-brand: hsl(217, 91%, 42%);
 
-  /* Status colors */
-  --color-success: hsl(142, 71%, 45%);
-  --color-warning: hsl(45, 93%, 47%);
-  --color-danger: hsl(0, 72%, 51%);
-  --color-info: hsl(199, 89%, 48%);
+  /* Status Colors */
+  --color-success: hsl(152, 69%, 38%);
+  --color-warning: hsl(38, 92%, 46%);
+  --color-danger: hsl(354, 78%, 54%);
+  --color-info: hsl(199, 89%, 46%);
 
   /* Shadows */
-  --shadow-sm: 0 1px 3px 0 rgb(0 0 0 / 0.05), 0 1px 2px -1px rgb(0 0 0 / 0.05);
-  --shadow-md: 0 4px 6px -1px rgb(0 0 0 / 0.07), 0 2px 4px -2px rgb(0 0 0 / 0.07);
-  --shadow-lg: 0 10px 15px -3px rgb(0 0 0 / 0.08), 0 4px 6px -4px rgb(0 0 0 / 0.08);
+  --shadow-sm: 0 1px 2px 0 rgb(15 23 42 / 0.05);
+  --shadow-md: 0 4px 6px -1px rgb(15 23 42 / 0.08), 0 2px 4px -2px rgb(15 23 42 / 0.04);
+  --shadow-lg: 0 10px 25px -5px rgb(15 23 42 / 0.1), 0 8px 10px -6px rgb(15 23 42 / 0.05);
 
-  /* Sidebar */
+  /* Layout Sizes */
   --sidebar-width: 260px;
   --sidebar-collapsed: 64px;
 }
 
 .dark {
+  /* Brand Palette */
+  --color-brand-primary: hsl(217, 85%, 62%);
+  --color-brand-secondary: hsl(217, 85%, 52%);
+  --color-brand-light: hsl(217, 30%, 18%);
+
   /* Surfaces */
-  --bg-page: hsl(222, 47%, 6%);
-  --bg-card: hsl(222, 36%, 10%);
-  --bg-card-hover: hsl(222, 34%, 13%);
-  --bg-sidebar: hsl(222, 40%, 8%);
-  --bg-input: hsl(222, 30%, 12%);
-  --bg-badge: hsl(246, 30%, 16%);
+  --bg-page: hsl(222, 47%, 7%);
+  --bg-card: hsl(222, 36%, 11%);
+  --bg-card-hover: hsl(222, 34%, 15%);
+  --bg-sidebar: hsl(222, 45%, 8%);
+  --bg-input: hsl(222, 30%, 14%);
+  --bg-badge: hsl(217, 30%, 18%);
 
   /* Borders */
   --border-default: hsl(222, 20%, 20%);
-  --border-focus: hsl(246, 75%, 65%);
+  --border-focus: hsl(217, 85%, 65%);
+  --border-subtle: hsl(222, 20%, 16%);
 
   /* Text */
-  --text-primary: hsl(213, 31%, 91%);
-  --text-secondary: hsl(215, 20%, 65%);
-  --text-muted: hsl(215, 16%, 47%);
-  --text-brand: hsl(246, 83%, 76%);
+  --text-primary: hsl(210, 40%, 96%);
+  --text-secondary: hsl(215, 20%, 70%);
+  --text-muted: hsl(215, 16%, 52%);
+  --text-brand: hsl(217, 85%, 68%);
 
   /* Shadows */
-  --shadow-sm: 0 1px 3px 0 rgb(0 0 0 / 0.3);
-  --shadow-md: 0 4px 6px -1px rgb(0 0 0 / 0.4);
-  --shadow-lg: 0 10px 15px -3px rgb(0 0 0 / 0.5);
+  --shadow-sm: 0 1px 3px 0 rgb(0 0 0 / 0.4);
+  --shadow-md: 0 4px 6px -1px rgb(0 0 0 / 0.5);
+  --shadow-lg: 0 10px 25px -5px rgb(0 0 0 / 0.6);
 }
 
 /* ============================================================
@@ -96,18 +102,14 @@ body {
   transition: background-color 0.2s ease, color 0.2s ease;
 }
 
-/* ============================================================
-   Focus styles (WCAG AA)
-   ============================================================ */
+/* Focus styles (WCAG AA) */
 :focus-visible {
   outline: 2px solid var(--border-focus);
   outline-offset: 2px;
-  border-radius: 4px;
+  border-radius: 6px;
 }
 
-/* ============================================================
-   Scrollbar
-   ============================================================ */
+/* Scrollbar */
 ::-webkit-scrollbar {
   width: 6px;
   height: 6px;
@@ -127,39 +129,38 @@ body {
 }
 
 /* ============================================================
-   Component Classes
+   Component Utility Classes
    ============================================================ */
 @layer components {
-  /* Cards */
+  /* Card System */
   .card {
     background-color: var(--bg-card);
     border: 1px solid var(--border-default);
-    border-radius: 12px;
+    border-radius: 14px;
     box-shadow: var(--shadow-sm);
-    transition: box-shadow 0.2s ease, border-color 0.2s ease;
+    transition: box-shadow 0.2s ease, border-color 0.2s ease, transform 0.2s ease;
   }
 
   .card:hover {
     box-shadow: var(--shadow-md);
   }
 
-  /* Buttons */
+  /* Button System */
   .btn {
-    @apply inline-flex items-center justify-center gap-2 rounded-lg px-4 py-2 text-sm font-medium;
-    @apply transition-all duration-150 cursor-pointer;
+    @apply inline-flex items-center justify-center gap-2 rounded-lg px-4 py-2 text-sm font-semibold tracking-wide;
+    @apply transition-all duration-150 cursor-pointer select-none;
     @apply disabled:opacity-50 disabled:cursor-not-allowed;
   }
 
   .btn-primary {
-    @apply btn;
-    background-color: var(--color-brand-primary);
-    color: white;
+    @apply btn text-white shadow-sm;
+    background: linear-gradient(135deg, hsl(217, 91%, 48%), hsl(220, 85%, 40%));
   }
 
   .btn-primary:hover:not(:disabled) {
-    background-color: var(--color-brand-secondary);
+    background: linear-gradient(135deg, hsl(217, 91%, 44%), hsl(220, 85%, 34%));
     transform: translateY(-1px);
-    box-shadow: var(--shadow-md);
+    box-shadow: 0 4px 12px rgba(37, 99, 235, 0.25);
   }
 
   .btn-secondary {
@@ -172,6 +173,7 @@ body {
   .btn-secondary:hover:not(:disabled) {
     background-color: var(--bg-card-hover);
     border-color: var(--color-brand-primary);
+    color: var(--text-brand);
   }
 
   .btn-ghost {
@@ -186,43 +188,42 @@ body {
   }
 
   .btn-danger {
-    @apply btn;
-    background-color: var(--color-danger);
-    color: white;
+    @apply btn text-white shadow-sm;
+    background: linear-gradient(135deg, hsl(354, 78%, 54%), hsl(354, 80%, 44%));
   }
 
   .btn-danger:hover:not(:disabled) {
-    opacity: 0.9;
+    opacity: 0.95;
+    transform: translateY(-1px);
   }
 
-  /* Inputs */
+  /* Inputs & Forms */
   .input {
-    @apply w-full rounded-lg px-3 py-2 text-sm;
+    @apply w-full rounded-xl px-3.5 py-2.5 text-sm transition-all duration-150;
     background-color: var(--bg-input);
     border: 1px solid var(--border-default);
     color: var(--text-primary);
-    transition: border-color 0.15s ease;
   }
 
   .input:focus {
     outline: none;
     border-color: var(--border-focus);
-    box-shadow: 0 0 0 3px hsl(246 75% 58% / 0.15);
+    box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.15);
+    background-color: var(--bg-card);
   }
 
   .input::placeholder {
     color: var(--text-muted);
   }
 
-  /* Labels */
   .label {
-    @apply block text-sm font-medium mb-1.5;
+    @apply block text-xs font-semibold uppercase tracking-wider mb-1.5;
     color: var(--text-secondary);
   }
 
   /* Badges */
   .badge {
-    @apply inline-flex items-center gap-1 rounded-full px-2.5 py-0.5 text-xs font-medium;
+    @apply inline-flex items-center gap-1 rounded-full px-2.5 py-0.5 text-xs font-semibold tracking-wide uppercase;
   }
 
   .badge-brand {
@@ -232,63 +233,64 @@ body {
   }
 
   .badge-success {
-    @apply badge bg-emerald-100 text-emerald-700 dark:bg-emerald-900/30 dark:text-emerald-400;
+    @apply badge bg-emerald-100 text-emerald-800 dark:bg-emerald-950/60 dark:text-emerald-300;
   }
 
   .badge-warning {
-    @apply badge bg-amber-100 text-amber-700 dark:bg-amber-900/30 dark:text-amber-400;
+    @apply badge bg-amber-100 text-amber-800 dark:bg-amber-950/60 dark:text-amber-300;
   }
 
   .badge-danger {
-    @apply badge bg-red-100 text-red-700 dark:bg-red-900/30 dark:text-red-400;
+    @apply badge bg-rose-100 text-rose-800 dark:bg-rose-950/60 dark:text-rose-300;
   }
 
   .badge-info {
-    @apply badge bg-sky-100 text-sky-700 dark:bg-sky-900/30 dark:text-sky-400;
+    @apply badge bg-sky-100 text-sky-800 dark:bg-sky-950/60 dark:text-sky-300;
   }
 
-  /* Sidebar nav items */
+  /* Navigation Item */
   .nav-item {
-    @apply flex items-center gap-3 rounded-lg px-3 py-2.5 text-sm font-medium;
-    color: var(--text-secondary);
-    transition: all 0.15s ease;
+    @apply flex items-center gap-3 rounded-xl px-3.5 py-2.5 text-sm font-medium transition-all duration-150;
+    color: hsl(215, 20%, 75%);
   }
 
   .nav-item:hover {
-    background-color: var(--bg-card-hover);
-    color: var(--text-primary);
+    background-color: rgba(255, 255, 255, 0.08);
+    color: white;
   }
 
   .nav-item.active {
-    background-color: var(--bg-badge);
-    color: var(--text-brand);
+    background: linear-gradient(135deg, hsl(217, 91%, 48%), hsl(220, 85%, 40%));
+    color: white;
     font-weight: 600;
+    box-shadow: 0 4px 12px rgba(37, 99, 235, 0.25);
   }
 
-  /* Page header */
+  /* Page Header */
   .page-header {
     @apply mb-6;
   }
 
   .page-title {
-    @apply text-2xl font-bold;
+    @apply text-2xl sm:text-3xl font-extrabold tracking-tight;
     color: var(--text-primary);
   }
 
   .page-subtitle {
-    @apply text-sm mt-1;
+    @apply text-sm mt-1 font-normal;
     color: var(--text-secondary);
   }
 
-  /* Stat card */
+  /* Stat Card */
   .stat-card {
-    @apply card p-5;
+    @apply card p-5 relative overflow-hidden;
   }
 
-  /* Table */
+  /* Tables */
   .table-wrapper {
-    @apply overflow-x-auto rounded-lg;
+    @apply overflow-x-auto rounded-xl;
     border: 1px solid var(--border-default);
+    background-color: var(--bg-card);
   }
 
   table {
@@ -300,44 +302,25 @@ body {
   }
 
   th {
-    @apply px-4 py-3 text-left text-xs font-semibold tracking-wider uppercase;
+    @apply px-4 py-3.5 text-left text-xs font-bold tracking-wider uppercase;
     color: var(--text-muted);
   }
 
   td {
-    @apply px-4 py-3;
+    @apply px-4 py-3.5;
     color: var(--text-primary);
-    border-top: 1px solid var(--border-default);
+    border-top: 1px solid var(--border-subtle);
   }
 
   tbody tr {
-    transition: background-color 0.1s ease;
+    transition: background-color 0.15s ease;
   }
 
   tbody tr:hover {
     background-color: var(--bg-card-hover);
   }
 
-  /* Glassmorphism card (for hero/login) */
-  .glass-card {
-    @apply rounded-2xl p-6;
-    background: rgba(255, 255, 255, 0.7);
-    backdrop-filter: blur(12px);
-    border: 1px solid rgba(255, 255, 255, 0.4);
-    box-shadow: var(--shadow-lg);
-  }
-
-  .dark .glass-card {
-    background: rgba(15, 20, 40, 0.7);
-    border: 1px solid rgba(255, 255, 255, 0.07);
-  }
-
-  /* Loading spinner */
-  .spinner {
-    @apply inline-block rounded-full border-2 border-current border-t-transparent animate-spin;
-  }
-
-  /* Progress bar */
+  /* Progress Bar */
   .progress-bar {
     @apply rounded-full overflow-hidden;
     background-color: var(--border-default);
@@ -345,6 +328,11 @@ body {
 
   .progress-fill {
     @apply h-full rounded-full transition-all duration-500;
-    background: linear-gradient(90deg, var(--color-brand-primary), hsl(286, 75%, 60%));
+    background: linear-gradient(90deg, var(--color-brand-primary), #0284c7);
+  }
+
+  /* Spinner */
+  .spinner {
+    @apply inline-block rounded-full border-2 border-current border-t-transparent animate-spin;
   }
 }

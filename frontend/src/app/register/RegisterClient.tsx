@@ -54,31 +54,30 @@ function RegisterFormComponent() {
     <div className="min-h-screen flex items-center justify-center p-6" style={{ background: 'var(--bg-page)' }}>
       {/* Theme toggle */}
       <button
-        className="fixed top-4 right-4 btn-secondary p-2"
+        className="fixed top-6 right-6 btn-secondary p-2.5 shadow-sm"
         onClick={() => setTheme(theme === 'dark' ? 'light' : 'dark')}
         aria-label={`Switch to ${theme === 'dark' ? 'light' : 'dark'} theme`}
       >
-        {theme === 'dark' ? <Sun className="w-4 h-4" /> : <Moon className="w-4 h-4" />}
+        {theme === 'dark' ? <Sun className="w-4 h-4 text-amber-400" /> : <Moon className="w-4 h-4 text-slate-700" />}
       </button>
 
-      <div className="w-full max-w-md">
-        {/* Logo */}
-        <div className="flex items-center gap-3 mb-8">
-          <div
-            className="w-10 h-10 rounded-xl flex items-center justify-center text-white font-bold text-lg"
-            style={{ background: 'linear-gradient(135deg, var(--color-brand-primary), hsl(286, 75%, 60%))' }}
-          >
+      <div className="w-full max-w-md space-y-6">
+        {/* Logo Header */}
+        <div className="flex items-center gap-3">
+          <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-blue-600 to-indigo-800 flex items-center justify-center text-white font-extrabold text-xl shadow-md border border-white/20">
             C
           </div>
-          <span className="font-bold text-xl" style={{ color: 'var(--text-primary)' }}>CampusFlow</span>
+          <span className="font-extrabold text-2xl tracking-tight" style={{ color: 'var(--text-primary)' }}>CampusFlow</span>
         </div>
 
-        <h1 className="text-2xl font-bold mb-2" style={{ color: 'var(--text-primary)' }}>
-          Create your account
-        </h1>
-        <p className="text-sm mb-8" style={{ color: 'var(--text-secondary)' }}>
-          Join your institution on CampusFlow
-        </p>
+        <div>
+          <h1 className="text-2xl sm:text-3xl font-extrabold tracking-tight" style={{ color: 'var(--text-primary)' }}>
+            Create your account
+          </h1>
+          <p className="text-sm mt-1" style={{ color: 'var(--text-secondary)' }}>
+            Join your campus institution on CampusFlow
+          </p>
+        </div>
 
         <form onSubmit={handleSubmit(onSubmit)} noValidate className="space-y-4">
           {/* Full Name */}
@@ -94,7 +93,7 @@ function RegisterFormComponent() {
               aria-invalid={!!errors.fullName}
             />
             {errors.fullName && (
-              <p className="text-xs mt-1 text-red-500" role="alert">{errors.fullName.message}</p>
+              <p className="text-xs mt-1 text-red-500 font-medium" role="alert">{errors.fullName.message}</p>
             )}
           </div>
 
@@ -111,7 +110,7 @@ function RegisterFormComponent() {
               aria-invalid={!!errors.email}
             />
             {errors.email && (
-              <p className="text-xs mt-1 text-red-500" role="alert">{errors.email.message}</p>
+              <p className="text-xs mt-1 text-red-500 font-medium" role="alert">{errors.email.message}</p>
             )}
           </div>
 
@@ -130,19 +129,15 @@ function RegisterFormComponent() {
               />
               <button
                 type="button"
-                className="absolute right-3 top-1/2 -translate-y-1/2 btn-ghost p-0"
+                className="absolute right-3 top-1/2 -translate-y-1/2 text-slate-400 hover:text-slate-600 dark:hover:text-slate-200 p-1"
                 onClick={() => setShowPassword((p) => !p)}
                 aria-label={showPassword ? 'Hide password' : 'Show password'}
               >
-                {showPassword ? (
-                  <EyeOff className="w-4 h-4" style={{ color: 'var(--text-muted)' }} />
-                ) : (
-                  <Eye className="w-4 h-4" style={{ color: 'var(--text-muted)' }} />
-                )}
+                {showPassword ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
               </button>
             </div>
             {errors.password && (
-              <p className="text-xs mt-1 text-red-500" role="alert">{errors.password.message}</p>
+              <p className="text-xs mt-1 text-red-500 font-medium" role="alert">{errors.password.message}</p>
             )}
           </div>
 
@@ -151,7 +146,7 @@ function RegisterFormComponent() {
             <label htmlFor="reg-role" className="label">Role *</label>
             <select
               id="reg-role"
-              className="input"
+              className="input font-medium"
               {...register('role')}
               aria-invalid={!!errors.role}
             >
@@ -162,7 +157,7 @@ function RegisterFormComponent() {
               <option value="admin">Admin</option>
             </select>
             {errors.role && (
-              <p className="text-xs mt-1 text-red-500" role="alert">{errors.role.message}</p>
+              <p className="text-xs mt-1 text-red-500 font-medium" role="alert">{errors.role.message}</p>
             )}
           </div>
 
@@ -177,11 +172,11 @@ function RegisterFormComponent() {
               {...register('institutionSlug')}
               aria-invalid={!!errors.institutionSlug}
             />
-            <p className="text-xs mt-1" style={{ color: 'var(--text-muted)' }}>
-              For demo: use <strong>demo-university</strong>
+            <p className="text-xs mt-1 font-medium" style={{ color: 'var(--text-muted)' }}>
+              For demo: use <strong className="text-blue-600 dark:text-blue-400">demo-university</strong>
             </p>
             {errors.institutionSlug && (
-              <p className="text-xs mt-1 text-red-500" role="alert">{errors.institutionSlug.message}</p>
+              <p className="text-xs mt-1 text-red-500 font-medium" role="alert">{errors.institutionSlug.message}</p>
             )}
           </div>
 
@@ -202,18 +197,14 @@ function RegisterFormComponent() {
 
           {/* Error */}
           {error && (
-            <div
-              className="p-3 rounded-lg border"
-              style={{ background: 'hsl(0,72%,97%)', borderColor: 'hsl(0,72%,80%)' }}
-              role="alert"
-            >
-              <p className="text-sm text-red-600">{error}</p>
+            <div className="p-3.5 rounded-xl bg-rose-50 dark:bg-rose-950/40 border border-rose-200 dark:border-rose-800/60" role="alert">
+              <p className="text-xs font-semibold text-rose-600 dark:text-rose-300">{error}</p>
             </div>
           )}
 
           <button
             type="submit"
-            className="btn-primary w-full py-2.5"
+            className="btn-primary w-full py-3 text-sm font-bold shadow-md"
             disabled={isSubmitting}
           >
             {isSubmitting ? (
@@ -227,9 +218,9 @@ function RegisterFormComponent() {
           </button>
         </form>
 
-        <p className="text-center text-sm mt-6" style={{ color: 'var(--text-secondary)' }}>
+        <p className="text-center text-sm font-medium" style={{ color: 'var(--text-secondary)' }}>
           Already have an account?{' '}
-          <Link href="/login" className="font-medium" style={{ color: 'var(--text-brand)' }}>
+          <Link href="/login" className="font-bold text-blue-600 dark:text-blue-400 hover:underline">
             Sign in
           </Link>
         </p>

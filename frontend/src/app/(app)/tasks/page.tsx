@@ -63,7 +63,6 @@ export default function TasksPage() {
     enabled: !isDemoMode,
   });
 
-
   // Demo mode handlers
   const handleDemoCreate = (formData: TaskForm) => {
     const newTask: Task = {
@@ -140,14 +139,14 @@ export default function TasksPage() {
 
   return (
     <div className="space-y-6 animate-fade-in">
-      <div className="flex flex-col sm:flex-row sm:items-center gap-3">
-        <div className="flex-1 page-header mb-0">
+      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+        <div className="page-header mb-0">
           <h1 className="page-title">Tasks & Deadlines</h1>
-          <p className="page-subtitle">Manage your academic tasks and set reminders.</p>
+          <p className="page-subtitle">Manage your assignment deadlines and schedule reminders.</p>
         </div>
         {user?.role === 'student' && (
           <button
-            className="btn-primary shrink-0"
+            className="btn-primary shrink-0 shadow-md"
             onClick={() => { setShowForm(true); setEditTask(null); }}
             aria-label="Add new task"
           >
@@ -164,13 +163,15 @@ export default function TasksPage() {
             key={s || 'all'}
             role="tab"
             aria-selected={filter === s}
-            className={`badge cursor-pointer transition-all ${
-              filter === s ? 'badge-brand font-semibold' : 'bg-[var(--bg-card)] border border-[var(--border-default)]'
+            className={`badge cursor-pointer transition-all px-3 py-1.5 ${
+              filter === s
+                ? 'badge-brand font-extrabold shadow-sm'
+                : 'bg-[var(--bg-card)] border border-[var(--border-default)] hover:border-blue-500'
             }`}
             onClick={() => setFilter(s)}
             style={{ color: filter === s ? 'var(--text-brand)' : 'var(--text-secondary)' }}
           >
-            {s ? s.replace('_', ' ') : 'All'}
+            {s ? s.replace('_', ' ') : 'All Tasks'}
           </button>
         ))}
       </div>
@@ -194,14 +195,14 @@ export default function TasksPage() {
       {/* Tasks list */}
       {isLoading ? (
         <div className="flex justify-center py-12">
-          <Loader2 className="w-6 h-6 animate-spin" style={{ color: 'var(--color-brand-primary)' }} />
+          <Loader2 className="w-6 h-6 animate-spin text-blue-600" />
         </div>
       ) : tasks.length === 0 ? (
         <div className="card p-12 text-center">
-          <CheckCircle className="w-12 h-12 mx-auto mb-3" style={{ color: 'var(--text-muted)' }} />
-          <p className="font-medium" style={{ color: 'var(--text-primary)' }}>No tasks found</p>
+          <CheckCircle className="w-12 h-12 mx-auto mb-3 text-slate-400" />
+          <p className="font-bold text-base" style={{ color: 'var(--text-primary)' }}>No tasks found</p>
           <p className="text-sm mt-1" style={{ color: 'var(--text-muted)' }}>
-            {user?.role === 'student' ? 'Click "Add Task" to get started.' : 'No tasks in this view.'}
+            {user?.role === 'student' ? 'Click "Add Task" to create your first deadline.' : 'No tasks recorded for this view.'}
           </p>
         </div>
       ) : (
@@ -215,12 +216,12 @@ export default function TasksPage() {
                   onClick={() => toggleComplete(task)}
                   aria-label={task.status === 'completed' ? 'Mark incomplete' : 'Mark complete'}
                 >
-                  <div className={`w-5 h-5 rounded border-2 flex items-center justify-center transition-all ${
+                  <div className={`w-5 h-5 rounded-lg border-2 flex items-center justify-center transition-all ${
                     task.status === 'completed'
                       ? 'bg-emerald-500 border-emerald-500'
-                      : 'border-[var(--border-default)]'
+                      : 'border-[var(--border-default)] group-hover:border-blue-500'
                   }`}>
-                    {task.status === 'completed' && <CheckCircle className="w-3 h-3 text-white" />}
+                    {task.status === 'completed' && <CheckCircle className="w-3.5 h-3.5 text-white" />}
                   </div>
                 </button>
               )}
@@ -228,7 +229,7 @@ export default function TasksPage() {
               <div className="flex-1 min-w-0">
                 <div className="flex flex-wrap items-center gap-2 mb-1">
                   <h3
-                    className={`font-medium text-sm ${task.status === 'completed' ? 'line-through opacity-50' : ''}`}
+                    className={`font-bold text-sm sm:text-base ${task.status === 'completed' ? 'line-through opacity-50' : ''}`}
                     style={{ color: 'var(--text-primary)' }}
                   >
                     {task.title}
@@ -238,23 +239,23 @@ export default function TasksPage() {
                 </div>
 
                 {task.description && (
-                  <p className="text-xs mb-2 line-clamp-2" style={{ color: 'var(--text-secondary)' }}>
+                  <p className="text-xs sm:text-sm mb-2 line-clamp-2" style={{ color: 'var(--text-secondary)' }}>
                     {task.description}
                   </p>
                 )}
 
-                <div className="flex flex-wrap items-center gap-3 text-xs" style={{ color: 'var(--text-muted)' }}>
+                <div className="flex flex-wrap items-center gap-3 text-xs font-semibold" style={{ color: 'var(--text-muted)' }}>
                   {task.subject_name && (
-                    <span>{task.subject_name}</span>
+                    <span className="text-blue-600 dark:text-blue-400">{task.subject_name}</span>
                   )}
                   {task.deadline_at && (
                     <span className="flex items-center gap-1">
-                      <Clock className="w-3 h-3" />
+                      <Clock className="w-3.5 h-3.5 text-amber-500" />
                       {formatDistanceToNow(new Date(task.deadline_at), { addSuffix: true })}
                     </span>
                   )}
 
-                  {/* Google Calendar Invite Link */}
+                  {/* Google Calendar Link */}
                   {(task.google_calendar_url || task.deadline_at) && (
                     <a
                       href={
@@ -263,11 +264,11 @@ export default function TasksPage() {
                       }
                       target="_blank"
                       rel="noopener noreferrer"
-                      className="inline-flex items-center gap-1 text-xs font-medium text-blue-600 hover:text-blue-700 dark:text-blue-400 dark:hover:text-blue-300 hover:underline"
-                      title="Add to your personal Google Calendar"
+                      className="inline-flex items-center gap-1 text-xs font-bold text-blue-600 hover:text-blue-700 dark:text-blue-400 dark:hover:text-blue-300 hover:underline"
+                      title="Add to Google Calendar"
                     >
-                      <Calendar className="w-3 h-3" />
-                      Add to Google Calendar
+                      <Calendar className="w-3.5 h-3.5" />
+                      Google Calendar
                     </a>
                   )}
                 </div>
@@ -284,7 +285,7 @@ export default function TasksPage() {
                     <Edit3 className="w-4 h-4" />
                   </button>
                   <button
-                    className="btn-ghost p-1.5 text-red-500 hover:bg-red-50 dark:hover:bg-red-900/10"
+                    className="btn-ghost p-1.5 text-rose-500 hover:bg-rose-50 dark:hover:bg-rose-950/30"
                     onClick={() => {
                         if (confirm('Delete this task?')) {
                           if (isDemoMode) { handleDemoDelete(task.id); } else { deleteMutation.mutate(task.id); }
@@ -327,11 +328,11 @@ function TaskModal({
   });
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/50 backdrop-blur-sm animate-fade-in" role="dialog" aria-modal="true" aria-labelledby="task-modal-title">
-      <div className="card w-full max-w-lg p-6 animate-slide-up">
-        <div className="flex items-center justify-between mb-5">
-          <h2 id="task-modal-title" className="font-semibold text-lg" style={{ color: 'var(--text-primary)' }}>
-            {task ? 'Edit Task' : 'New Task'}
+    <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-950/60 backdrop-blur-sm animate-fade-in" role="dialog" aria-modal="true" aria-labelledby="task-modal-title">
+      <div className="card w-full max-w-lg p-6 animate-slide-up shadow-xl">
+        <div className="flex items-center justify-between mb-5 border-b pb-3" style={{ borderColor: 'var(--border-default)' }}>
+          <h2 id="task-modal-title" className="font-extrabold text-lg" style={{ color: 'var(--text-primary)' }}>
+            {task ? 'Edit Task' : 'New Assignment / Deadline'}
           </h2>
           <button className="btn-ghost p-1" onClick={onClose} aria-label="Close dialog">
             <X className="w-5 h-5" />
@@ -341,19 +342,19 @@ function TaskModal({
         <form onSubmit={handleSubmit(onSubmit)} noValidate className="space-y-4">
           <div>
             <label htmlFor="task-title" className="label">Title *</label>
-            <input id="task-title" className="input" placeholder="What needs to be done?" {...register('title')} aria-invalid={!!errors.title} />
-            {errors.title && <p className="text-xs mt-1 text-red-500" role="alert">{errors.title.message}</p>}
+            <input id="task-title" className="input" placeholder="What needs to be completed?" {...register('title')} aria-invalid={!!errors.title} />
+            {errors.title && <p className="text-xs mt-1 text-red-500 font-medium" role="alert">{errors.title.message}</p>}
           </div>
 
           <div>
             <label htmlFor="task-desc" className="label">Description</label>
-            <textarea id="task-desc" className="input" rows={3} placeholder="Additional details..." {...register('description')} />
+            <textarea id="task-desc" className="input" rows={3} placeholder="Additional instructions or notes..." {...register('description')} />
           </div>
 
           <div className="grid grid-cols-2 gap-4">
             <div>
               <label htmlFor="task-priority" className="label">Priority</label>
-              <select id="task-priority" className="input" {...register('priority')}>
+              <select id="task-priority" className="input font-semibold" {...register('priority')}>
                 <option value="low">Low</option>
                 <option value="medium">Medium</option>
                 <option value="high">High</option>
@@ -362,7 +363,7 @@ function TaskModal({
             </div>
             <div>
               <label htmlFor="task-status" className="label">Status</label>
-              <select id="task-status" className="input" {...register('status')}>
+              <select id="task-status" className="input font-semibold" {...register('status')}>
                 <option value="pending">Pending</option>
                 <option value="in_progress">In Progress</option>
                 <option value="completed">Completed</option>
@@ -372,13 +373,13 @@ function TaskModal({
 
           <div>
             <label htmlFor="task-deadline" className="label">Deadline</label>
-            <input id="task-deadline" type="datetime-local" className="input" {...register('deadlineAt')} />
-            <p className="text-xs mt-1" style={{ color: 'var(--text-muted)' }}>
-              A WhatsApp reminder will be sent 24h before the deadline.
+            <input id="task-deadline" type="datetime-local" className="input font-medium" {...register('deadlineAt')} />
+            <p className="text-xs mt-1 font-medium" style={{ color: 'var(--text-muted)' }}>
+              A WhatsApp notification reminder will trigger 24 hours prior.
             </p>
           </div>
 
-          <div className="flex gap-3 pt-2">
+          <div className="flex gap-3 pt-3">
             <button type="button" className="btn-secondary flex-1" onClick={onClose}>Cancel</button>
             <button type="submit" className="btn-primary flex-1" disabled={isLoading}>
               {isLoading ? <Loader2 className="w-4 h-4 animate-spin" /> : task ? 'Save Changes' : 'Create Task'}
