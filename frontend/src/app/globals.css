@@ -1,0 +1,350 @@
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap');
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* ============================================================
+   CSS Custom Properties (Design Tokens)
+   CSS-variable based theming — persisted per user via next-themes
+   ============================================================ */
+:root {
+  /* Brand */
+  --color-brand-primary: hsl(246, 75%, 58%);
+  --color-brand-secondary: hsl(246, 67%, 50%);
+  --color-brand-light: hsl(246, 100%, 97%);
+
+  /* Surfaces */
+  --bg-page: hsl(220, 20%, 97%);
+  --bg-card: hsl(0, 0%, 100%);
+  --bg-card-hover: hsl(220, 20%, 98%);
+  --bg-sidebar: hsl(0, 0%, 100%);
+  --bg-input: hsl(220, 20%, 97%);
+  --bg-badge: hsl(246, 100%, 97%);
+
+  /* Borders */
+  --border-default: hsl(220, 13%, 91%);
+  --border-focus: hsl(246, 75%, 58%);
+
+  /* Text */
+  --text-primary: hsl(222, 47%, 11%);
+  --text-secondary: hsl(215, 16%, 47%);
+  --text-muted: hsl(215, 20%, 65%);
+  --text-brand: hsl(246, 67%, 50%);
+
+  /* Status colors */
+  --color-success: hsl(142, 71%, 45%);
+  --color-warning: hsl(45, 93%, 47%);
+  --color-danger: hsl(0, 72%, 51%);
+  --color-info: hsl(199, 89%, 48%);
+
+  /* Shadows */
+  --shadow-sm: 0 1px 3px 0 rgb(0 0 0 / 0.05), 0 1px 2px -1px rgb(0 0 0 / 0.05);
+  --shadow-md: 0 4px 6px -1px rgb(0 0 0 / 0.07), 0 2px 4px -2px rgb(0 0 0 / 0.07);
+  --shadow-lg: 0 10px 15px -3px rgb(0 0 0 / 0.08), 0 4px 6px -4px rgb(0 0 0 / 0.08);
+
+  /* Sidebar */
+  --sidebar-width: 260px;
+  --sidebar-collapsed: 64px;
+}
+
+.dark {
+  /* Surfaces */
+  --bg-page: hsl(222, 47%, 6%);
+  --bg-card: hsl(222, 36%, 10%);
+  --bg-card-hover: hsl(222, 34%, 13%);
+  --bg-sidebar: hsl(222, 40%, 8%);
+  --bg-input: hsl(222, 30%, 12%);
+  --bg-badge: hsl(246, 30%, 16%);
+
+  /* Borders */
+  --border-default: hsl(222, 20%, 20%);
+  --border-focus: hsl(246, 75%, 65%);
+
+  /* Text */
+  --text-primary: hsl(213, 31%, 91%);
+  --text-secondary: hsl(215, 20%, 65%);
+  --text-muted: hsl(215, 16%, 47%);
+  --text-brand: hsl(246, 83%, 76%);
+
+  /* Shadows */
+  --shadow-sm: 0 1px 3px 0 rgb(0 0 0 / 0.3);
+  --shadow-md: 0 4px 6px -1px rgb(0 0 0 / 0.4);
+  --shadow-lg: 0 10px 15px -3px rgb(0 0 0 / 0.5);
+}
+
+/* ============================================================
+   Base Styles
+   ============================================================ */
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  font-family: 'Inter', system-ui, -apple-system, sans-serif;
+  background-color: var(--bg-page);
+  color: var(--text-primary);
+  line-height: 1.6;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  transition: background-color 0.2s ease, color 0.2s ease;
+}
+
+/* ============================================================
+   Focus styles (WCAG AA)
+   ============================================================ */
+:focus-visible {
+  outline: 2px solid var(--border-focus);
+  outline-offset: 2px;
+  border-radius: 4px;
+}
+
+/* ============================================================
+   Scrollbar
+   ============================================================ */
+::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+::-webkit-scrollbar-thumb {
+  background: var(--border-default);
+  border-radius: 3px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: var(--text-muted);
+}
+
+/* ============================================================
+   Component Classes
+   ============================================================ */
+@layer components {
+  /* Cards */
+  .card {
+    background-color: var(--bg-card);
+    border: 1px solid var(--border-default);
+    border-radius: 12px;
+    box-shadow: var(--shadow-sm);
+    transition: box-shadow 0.2s ease, border-color 0.2s ease;
+  }
+
+  .card:hover {
+    box-shadow: var(--shadow-md);
+  }
+
+  /* Buttons */
+  .btn {
+    @apply inline-flex items-center justify-center gap-2 rounded-lg px-4 py-2 text-sm font-medium;
+    @apply transition-all duration-150 cursor-pointer;
+    @apply disabled:opacity-50 disabled:cursor-not-allowed;
+  }
+
+  .btn-primary {
+    @apply btn;
+    background-color: var(--color-brand-primary);
+    color: white;
+  }
+
+  .btn-primary:hover:not(:disabled) {
+    background-color: var(--color-brand-secondary);
+    transform: translateY(-1px);
+    box-shadow: var(--shadow-md);
+  }
+
+  .btn-secondary {
+    @apply btn;
+    background-color: var(--bg-input);
+    color: var(--text-primary);
+    border: 1px solid var(--border-default);
+  }
+
+  .btn-secondary:hover:not(:disabled) {
+    background-color: var(--bg-card-hover);
+    border-color: var(--color-brand-primary);
+  }
+
+  .btn-ghost {
+    @apply btn;
+    background: transparent;
+    color: var(--text-secondary);
+  }
+
+  .btn-ghost:hover:not(:disabled) {
+    background-color: var(--bg-card-hover);
+    color: var(--text-primary);
+  }
+
+  .btn-danger {
+    @apply btn;
+    background-color: var(--color-danger);
+    color: white;
+  }
+
+  .btn-danger:hover:not(:disabled) {
+    opacity: 0.9;
+  }
+
+  /* Inputs */
+  .input {
+    @apply w-full rounded-lg px-3 py-2 text-sm;
+    background-color: var(--bg-input);
+    border: 1px solid var(--border-default);
+    color: var(--text-primary);
+    transition: border-color 0.15s ease;
+  }
+
+  .input:focus {
+    outline: none;
+    border-color: var(--border-focus);
+    box-shadow: 0 0 0 3px hsl(246 75% 58% / 0.15);
+  }
+
+  .input::placeholder {
+    color: var(--text-muted);
+  }
+
+  /* Labels */
+  .label {
+    @apply block text-sm font-medium mb-1.5;
+    color: var(--text-secondary);
+  }
+
+  /* Badges */
+  .badge {
+    @apply inline-flex items-center gap-1 rounded-full px-2.5 py-0.5 text-xs font-medium;
+  }
+
+  .badge-brand {
+    @apply badge;
+    background-color: var(--bg-badge);
+    color: var(--text-brand);
+  }
+
+  .badge-success {
+    @apply badge bg-emerald-100 text-emerald-700 dark:bg-emerald-900/30 dark:text-emerald-400;
+  }
+
+  .badge-warning {
+    @apply badge bg-amber-100 text-amber-700 dark:bg-amber-900/30 dark:text-amber-400;
+  }
+
+  .badge-danger {
+    @apply badge bg-red-100 text-red-700 dark:bg-red-900/30 dark:text-red-400;
+  }
+
+  .badge-info {
+    @apply badge bg-sky-100 text-sky-700 dark:bg-sky-900/30 dark:text-sky-400;
+  }
+
+  /* Sidebar nav items */
+  .nav-item {
+    @apply flex items-center gap-3 rounded-lg px-3 py-2.5 text-sm font-medium;
+    color: var(--text-secondary);
+    transition: all 0.15s ease;
+  }
+
+  .nav-item:hover {
+    background-color: var(--bg-card-hover);
+    color: var(--text-primary);
+  }
+
+  .nav-item.active {
+    background-color: var(--bg-badge);
+    color: var(--text-brand);
+    font-weight: 600;
+  }
+
+  /* Page header */
+  .page-header {
+    @apply mb-6;
+  }
+
+  .page-title {
+    @apply text-2xl font-bold;
+    color: var(--text-primary);
+  }
+
+  .page-subtitle {
+    @apply text-sm mt-1;
+    color: var(--text-secondary);
+  }
+
+  /* Stat card */
+  .stat-card {
+    @apply card p-5;
+  }
+
+  /* Table */
+  .table-wrapper {
+    @apply overflow-x-auto rounded-lg;
+    border: 1px solid var(--border-default);
+  }
+
+  table {
+    @apply w-full text-sm border-collapse;
+  }
+
+  thead {
+    background-color: var(--bg-input);
+  }
+
+  th {
+    @apply px-4 py-3 text-left text-xs font-semibold tracking-wider uppercase;
+    color: var(--text-muted);
+  }
+
+  td {
+    @apply px-4 py-3;
+    color: var(--text-primary);
+    border-top: 1px solid var(--border-default);
+  }
+
+  tbody tr {
+    transition: background-color 0.1s ease;
+  }
+
+  tbody tr:hover {
+    background-color: var(--bg-card-hover);
+  }
+
+  /* Glassmorphism card (for hero/login) */
+  .glass-card {
+    @apply rounded-2xl p-6;
+    background: rgba(255, 255, 255, 0.7);
+    backdrop-filter: blur(12px);
+    border: 1px solid rgba(255, 255, 255, 0.4);
+    box-shadow: var(--shadow-lg);
+  }
+
+  .dark .glass-card {
+    background: rgba(15, 20, 40, 0.7);
+    border: 1px solid rgba(255, 255, 255, 0.07);
+  }
+
+  /* Loading spinner */
+  .spinner {
+    @apply inline-block rounded-full border-2 border-current border-t-transparent animate-spin;
+  }
+
+  /* Progress bar */
+  .progress-bar {
+    @apply rounded-full overflow-hidden;
+    background-color: var(--border-default);
+  }
+
+  .progress-fill {
+    @apply h-full rounded-full transition-all duration-500;
+    background: linear-gradient(90deg, var(--color-brand-primary), hsl(286, 75%, 60%));
+  }
+}

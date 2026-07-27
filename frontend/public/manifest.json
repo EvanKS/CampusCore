@@ -1,0 +1,38 @@
+{
+  "name": "CampusFlow",
+  "short_name": "CampusFlow",
+  "description": "Campus productivity platform for students, teachers, parents, and admins",
+  "start_url": "/dashboard",
+  "display": "standalone",
+  "background_color": "#f0f2f9",
+  "theme_color": "#5048e5",
+  "orientation": "portrait-primary",
+  "icons": [
+    {
+      "src": "/icon-192.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "any maskable"
+    },
+    {
+      "src": "/icon-512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any maskable"
+    }
+  ],
+  "categories": ["education", "productivity"],
+  "screenshots": [],
+  "shortcuts": [
+    {
+      "name": "Dashboard",
+      "url": "/dashboard",
+      "description": "Go to your dashboard"
+    },
+    {
+      "name": "Tasks",
+      "url": "/tasks",
+      "description": "View your tasks"
+    }
+  ]
+}

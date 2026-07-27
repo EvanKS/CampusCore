@@ -1,0 +1,243 @@
+{
+  "name": "CampusFlow - Master Automation Workflow (Zero ngrok)",
+  "nodes": [
+    {
+      "parameters": {
+        "httpMethod": "POST",
+        "path": "notice-broadcast",
+        "options": { "responseMode": "lastNode" }
+      },
+      "id": "notice-trigger",
+      "name": "Notice Webhook Trigger",
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 1,
+      "position": [250, 200],
+      "webhookId": "campusflow-notice-broadcast"
+    },
+    {
+      "parameters": {
+        "fieldToSplitOut": "students",
+        "include": "allOtherFields"
+      },
+      "id": "split-students",
+      "name": "Split Students",
+      "type": "n8n-nodes-base.splitInBatches",
+      "typeVersion": 1,
+      "position": [550, 200]
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "string": [
+            {
+              "value1": "={{ $json.phone }}",
+              "operation": "isNotEmpty"
+            }
+          ]
+        }
+      },
+      "id": "has-phone",
+      "name": "Has Phone?",
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 1,
+      "position": [800, 200]
+    },
+    {
+      "parameters": {
+        "authentication": "basicAuth",
+        "requestMethod": "POST",
+        "url": "https://api.twilio.com/2010-04-01/Accounts/YOUR_TWILIO_ACCOUNT_SID/Messages.json",
+        "bodyParametersUi": {
+          "parameter": [
+            { "name": "From", "value": "whatsapp:+14155238886" },
+            { "name": "To", "value": "=whatsapp:{{ $json.phone }}" },
+            {
+              "name": "Body",
+              "value": "=📢 *{{ $('Notice Webhook Trigger').item.json.title }}*\n\n{{ $('Notice Webhook Trigger').item.json.aiSummary || 'Please check CampusFlow for details.' }}"
+            }
+          ]
+        }
+      },
+      "id": "notice-whatsapp",
+      "name": "Send Notice WhatsApp",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 3,
+      "position": [1050, 100]
+    },
+    {
+      "parameters": {
+        "authentication": "oAuth2",
+        "resource": "event",
+        "operation": "create",
+        "calendarId": "primary",
+        "title": "=📢 Notice: {{ $('Notice Webhook Trigger').item.json.title }}",
+        "startTime": "={{ new Date().toISOString() }}",
+        "endTime": "={{ new Date(Date.now() + 3600000).toISOString() }}",
+        "options": {
+          "description": "={{ $('Notice Webhook Trigger').item.json.aiSummary }}"
+        }
+      },
+      "id": "notice-calendar",
+      "name": "Notice Calendar Event",
+      "type": "n8n-nodes-base.googleCalendar",
+      "typeVersion": 1,
+      "position": [1050, 300]
+    },
+    {
+      "parameters": {
+        "respondWith": "json",
+        "responseBody": "={{ JSON.stringify({ received: true, executionId: $execution.id }) }}"
+      },
+      "id": "notice-respond",
+      "name": "Notice Respond",
+      "type": "n8n-nodes-base.respondToWebhook",
+      "typeVersion": 1,
+      "position": [1300, 200]
+    },
+    {
+      "parameters": {
+        "httpMethod": "POST",
+        "path": "deadline-reminder",
+        "options": {
+          "responseMode": "lastNode"
+        }
+      },
+      "id": "deadline-trigger",
+      "name": "Deadline Webhook Trigger",
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 1,
+      "position": [250, 500],
+      "webhookId": "campusflow-deadline-reminder"
+    },
+    {
+      "parameters": {
+        "content": "={{ $json.taskId }}",
+        "fieldToSplitOut": "taskId"
+      },
+      "id": "validate-payload",
+      "name": "Validate Payload",
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 2,
+      "position": [450, 500]
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "string": [
+            {
+              "value1": "={{ $json.phone }}",
+              "operation": "isNotEmpty"
+            }
+          ]
+        }
+      },
+      "id": "check-task-id",
+      "name": "Has Task ID?",
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 1,
+      "position": [650, 500]
+    },
+    {
+      "parameters": {
+        "authentication": "basicAuth",
+        "requestMethod": "POST",
+        "url": "https://api.twilio.com/2010-04-01/Accounts/YOUR_TWILIO_ACCOUNT_SID/Messages.json",
+        "bodyParametersUi": {
+          "parameter": [
+            { "name": "From", "value": "whatsapp:+14155238886" },
+            { "name": "To", "value": "=whatsapp:{{ $json.phone }}" },
+            {
+              "name": "Body",
+              "value": "=⏰ *CampusFlow Reminder*\n\nYour task *\"{{ $json.title }}\"* is due in 24 hours!\n📅 Deadline: {{ $json.deadlineAt }}\n\n📅 *Add to Google Calendar:* {{ $json.googleCalendarUrl }}\n\nStay on track! 💪"
+            }
+          ]
+        }
+      },
+      "id": "deadline-whatsapp",
+      "name": "Send Deadline WhatsApp",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 3,
+      "position": [900, 400]
+    },
+    {
+      "parameters": {
+        "authentication": "oAuth2",
+        "resource": "event",
+        "operation": "create",
+        "calendarId": "primary",
+        "title": "=📅 Task Due: {{ $json.title }}",
+        "startTime": "={{ $json.deadlineAt }}",
+        "endTime": "={{ $json.deadlineAt }}",
+        "options": {
+          "description": "=CampusFlow Task Deadline\n\nTask: {{ $json.title }}"
+        }
+      },
+      "id": "deadline-calendar",
+      "name": "Deadline Calendar Event",
+      "type": "n8n-nodes-base.googleCalendar",
+      "typeVersion": 1,
+      "position": [900, 600]
+    },
+    {
+      "parameters": {
+        "respondWith": "json",
+        "responseBody": "={{ JSON.stringify({ success: true }) }}"
+      },
+      "id": "deadline-respond",
+      "name": "Deadline Respond",
+      "type": "n8n-nodes-base.respondToWebhook",
+      "typeVersion": 1,
+      "position": [1150, 500]
+    }
+  ],
+  "connections": {
+    "Notice Webhook Trigger": {
+      "main": [[{ "node": "Split Students", "type": "main", "index": 0 }]]
+    },
+    "Split Students": {
+      "main": [[{ "node": "Has Phone?", "type": "main", "index": 0 }]]
+    },
+    "Has Phone?": {
+      "main": [
+        [
+          { "node": "Send Notice WhatsApp", "type": "main", "index": 0 },
+          { "node": "Notice Calendar Event", "type": "main", "index": 0 }
+        ],
+        []
+      ]
+    },
+    "Send Notice WhatsApp": {
+      "main": [[{ "node": "Notice Respond", "type": "main", "index": 0 }]]
+    },
+    "Notice Calendar Event": {
+      "main": [[{ "node": "Notice Respond", "type": "main", "index": 0 }]]
+    },
+    "Deadline Webhook Trigger": {
+      "main": [[{ "node": "Validate Payload", "type": "main", "index": 0 }]]
+    },
+    "Validate Payload": {
+      "main": [[{ "node": "Has Task ID?", "type": "main", "index": 0 }]]
+    },
+    "Has Task ID?": {
+      "main": [
+        [
+          { "node": "Send Deadline WhatsApp", "type": "main", "index": 0 },
+          { "node": "Deadline Calendar Event", "type": "main", "index": 0 }
+        ],
+        []
+      ]
+    },
+    "Send Deadline WhatsApp": {
+      "main": [[{ "node": "Deadline Respond", "type": "main", "index": 0 }]]
+    },
+    "Deadline Calendar Event": {
+      "main": [[{ "node": "Deadline Respond", "type": "main", "index": 0 }]]
+    }
+  },
+  "settings": {
+    "executionOrder": "v1",
+    "saveManualExecutions": true,
+    "saveExecutionProgress": true
+  },
+  "tags": ["campusflow", "master-automation-zero-ngrok"]
+}

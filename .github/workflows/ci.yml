@@ -1,0 +1,88 @@
+name: CampusFlow CI
+
+on:
+  push:
+    branches: [main, develop]
+  pull_request:
+    branches: [main]
+
+jobs:
+  # ── Backend ────────────────────────────────────────────────
+  backend:
+    name: Backend — lint + type-check + tests
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: backend
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+          cache: 'npm'
+          cache-dependency-path: backend/package-lock.json
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: TypeScript type-check
+        run: npx tsc --noEmit
+
+      - name: Run tests
+        run: npm test
+        env:
+          # Use placeholder env for CI — tests mock the DB
+          DATABASE_URL: postgresql://test:test@localhost:5432/campusflow_test
+          DIRECT_URL: postgresql://test:test@localhost:5432/campusflow_test
+          JWT_ACCESS_SECRET: ci-test-access-secret-32-chars-long
+          JWT_REFRESH_SECRET: ci-test-refresh-secret-32-chars-long
+          UPSTASH_REDIS_REST_URL: https://test.upstash.io
+          UPSTASH_REDIS_REST_TOKEN: ci_test_token
+          NODE_ENV: test
+
+  # ── Frontend ───────────────────────────────────────────────
+  frontend:
+    name: Frontend — lint + type-check
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: frontend
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+          cache: 'npm'
+          cache-dependency-path: frontend/package-lock.json
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: TypeScript type-check
+        run: npx tsc --noEmit
+
+      - name: Lint
+        run: npm run lint
+        env:
+          NEXT_PUBLIC_API_URL: http://localhost:4000/api
+
+  # ── Security: no secrets in committed files ────────────────
+  secret-scan:
+    name: Verify no secrets committed
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Check .env files not committed
+        run: |
+          if git ls-files | grep -E '^(frontend/\.env\.local|backend/\.env)$'; then
+            echo "ERROR: Real .env files should never be committed!"
+            exit 1
+          fi
+          echo "No real .env files found in tree — OK"

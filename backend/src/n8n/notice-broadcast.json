@@ -1,0 +1,175 @@
+{
+  "name": "CampusFlow - Notice Broadcast",
+  "nodes": [
+    {
+      "parameters": {
+        "path": "notice-broadcast",
+        "options": { "responseMode": "lastNode" }
+      },
+      "id": "webhook-trigger",
+      "name": "Webhook Trigger",
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 1,
+      "position": [250, 300],
+      "webhookId": "campusflow-notice-broadcast"
+    },
+    {
+      "parameters": {
+        "method": "GET",
+        "url": "=http://localhost:4000/api/users?role=student&limit=200",
+        "authentication": "genericCredentialType",
+        "genericAuthType": "httpHeaderAuth",
+        "options": {}
+      },
+      "id": "fetch-students",
+      "name": "Fetch Target Students",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 3,
+      "position": [450, 300]
+    },
+    {
+      "parameters": {
+        "fieldToSplitOut": "data",
+        "include": "allOtherFields"
+      },
+      "id": "split-students",
+      "name": "Split Students",
+      "type": "n8n-nodes-base.splitInBatches",
+      "typeVersion": 1,
+      "position": [650, 300]
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "string": [
+            {
+              "value1": "={{ $json.phone }}",
+              "operation": "isNotEmpty"
+            }
+          ]
+        }
+      },
+      "id": "has-phone",
+      "name": "Has Phone?",
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 1,
+      "position": [850, 300]
+    },
+    {
+      "parameters": {
+        "authentication": "basicAuth",
+        "requestMethod": "POST",
+        "url": "https://api.twilio.com/2010-04-01/Accounts/={{ $env.TWILIO_ACCOUNT_SID }}/Messages.json",
+        "bodyParametersUi": {
+          "parameter": [
+            { "name": "From", "value": "whatsapp:+14155238886" },
+            { "name": "To", "value": "=whatsapp:{{ $('Webhook Trigger').item.json.phone }}" },
+            {
+              "name": "Body",
+              "value": "=📢 *{{ $('Webhook Trigger').item.json.title }}*\n\n{{ $('Webhook Trigger').item.json.aiSummary || 'Please check CampusFlow for details.' }}\n\n📅 *Add to Google Calendar:* {{ $('Webhook Trigger').item.json.googleCalendarUrl }}"
+            }
+          ]
+        }
+      },
+      "id": "send-whatsapp",
+      "name": "Send WhatsApp",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 3,
+      "position": [1050, 200]
+    },
+    {
+      "parameters": {
+        "authentication": "oAuth2",
+        "resource": "event",
+        "operation": "create",
+        "calendarId": "primary",
+        "title": "=📢 Notice: {{ $('Webhook Trigger').item.json.title }}",
+        "startTime": "={{ new Date().toISOString() }}",
+        "endTime": "={{ new Date(Date.now() + 3600000).toISOString() }}",
+        "options": {
+          "description": "={{ $('Webhook Trigger').item.json.aiSummary }}"
+        }
+      },
+      "id": "create-calendar",
+      "name": "Create Calendar Event",
+      "type": "n8n-nodes-base.googleCalendar",
+      "typeVersion": 1,
+      "position": [1050, 400]
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "http://localhost:4000/api/webhooks/n8n/notice-broadcast",
+        "bodyParametersUi": {
+          "parameter": [
+            { "name": "noticeId", "value": "={{ $('Webhook Trigger').item.json.noticeId }}" },
+            { "name": "institutionId", "value": "={{ $('Webhook Trigger').item.json.institutionId }}" },
+            { "name": "status", "value": "success" },
+            { "name": "executionId", "value": "={{ $execution.id }}" }
+          ]
+        }
+      },
+      "id": "callback",
+      "name": "Log to Backend",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 3,
+      "position": [1250, 300]
+    },
+    {
+      "parameters": {
+        "respondWith": "json",
+        "responseBody": "={{ JSON.stringify({ received: true, executionId: $execution.id }) }}"
+      },
+      "id": "respond",
+      "name": "Respond",
+      "type": "n8n-nodes-base.respondToWebhook",
+      "typeVersion": 1,
+      "position": [1450, 300]
+    }
+  ],
+  "connections": {
+    "Webhook Trigger": {
+      "main": [
+        [{ "node": "Fetch Target Students", "type": "main", "index": 0 }]
+      ]
+    },
+    "Fetch Target Students": {
+      "main": [
+        [{ "node": "Split Students", "type": "main", "index": 0 }]
+      ]
+    },
+    "Split Students": {
+      "main": [
+        [{ "node": "Has Phone?", "type": "main", "index": 0 }]
+      ]
+    },
+    "Has Phone?": {
+      "main": [
+        [
+          { "node": "Send WhatsApp", "type": "main", "index": 0 },
+          { "node": "Create Calendar Event", "type": "main", "index": 0 }
+        ],
+        []
+      ]
+    },
+    "Send WhatsApp": {
+      "main": [[{ "node": "Log to Backend", "type": "main", "index": 0 }]]
+    },
+    "Create Calendar Event": {
+      "main": [[{ "node": "Log to Backend", "type": "main", "index": 0 }]]
+    },
+    "Log to Backend": {
+      "main": [[{ "node": "Respond", "type": "main", "index": 0 }]]
+    }
+  },
+  "settings": {
+    "executionOrder": "v1",
+    "saveManualExecutions": true,
+    "saveExecutionProgress": true
+  },
+  "tags": ["campusflow", "notices"],
+  "meta": {
+    "description": "CampusFlow notice broadcast workflow. Triggered when teacher/admin posts a notice. Fetches target students, sends WhatsApp via Twilio to each, creates Google Calendar event, and logs execution back to backend.",
+    "templateId": "campusflow-notice-broadcast"
+  }
+}

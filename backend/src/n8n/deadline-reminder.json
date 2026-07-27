@@ -1,0 +1,247 @@
+{
+  "name": "CampusFlow - Deadline Reminder",
+  "nodes": [
+    {
+      "parameters": {
+        "path": "deadline-reminder",
+        "options": {
+          "responseMode": "lastNode"
+        }
+      },
+      "id": "webhook-trigger",
+      "name": "Webhook Trigger",
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 1,
+      "position": [
+        250,
+        300
+      ],
+      "webhookId": "campusflow-deadline-reminder"
+    },
+    {
+      "parameters": {
+        "content": "={{ $json.taskId }}",
+        "fieldToSplitOut": "taskId"
+      },
+      "id": "validate-payload",
+      "name": "Validate Payload",
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 2,
+      "position": [
+        450,
+        300
+      ]
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "string": [
+            {
+              "value1": "={{ $json.taskId }}",
+              "operation": "isNotEmpty"
+            }
+          ]
+        }
+      },
+      "id": "check-task-id",
+      "name": "Has Task ID?",
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 1,
+      "position": [
+        650,
+        300
+      ]
+    },
+    {
+      "parameters": {
+        "authentication": "basicAuth",
+        "requestMethod": "POST",
+        "url": "https://api.twilio.com/2010-04-01/Accounts/{{ $env.TWILIO_ACCOUNT_SID }}/Messages.json",
+        "bodyParametersUi": {
+          "parameter": [
+            {
+              "name": "From",
+              "value": "whatsapp:+14155238886"
+            },
+            {
+              "name": "To",
+              "value": "=whatsapp:{{ $json.phone }}"
+            },
+            {
+              "name": "Body",
+              "value": "=⏰ *CampusFlow Reminder*\n\nYour task *\"{{ $json.title }}\"* is due in 24 hours!\n📅 Deadline: {{ $json.deadlineAt }}\n\n📅 *Add to Google Calendar:* {{ $json.googleCalendarUrl }}\n\nStay on track! 💪"
+            }
+          ]
+        }
+      },
+      "id": "send-whatsapp",
+      "name": "Send WhatsApp",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 3,
+      "position": [
+        900,
+        200
+      ]
+    },
+    {
+      "parameters": {
+        "authentication": "oAuth2",
+        "resource": "event",
+        "operation": "create",
+        "calendarId": "primary",
+        "title": "=📅 Task Due: {{ $json.title }}",
+        "startTime": "={{ $json.deadlineAt }}",
+        "endTime": "={{ $json.deadlineAt }}",
+        "options": {
+          "description": "=CampusFlow Task Deadline\n\nTask: {{ $json.title }}"
+        }
+      },
+      "id": "create-calendar-event",
+      "name": "Create Calendar Event",
+      "type": "n8n-nodes-base.googleCalendar",
+      "typeVersion": 1,
+      "position": [
+        900,
+        400
+      ]
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "=http://localhost:4000/api/webhooks/n8n/deadline-reminder",
+        "bodyParametersUi": {
+          "parameter": [
+            {
+              "name": "taskId",
+              "value": "={{ $json.taskId }}"
+            },
+            {
+              "name": "institutionId",
+              "value": "={{ $json.institutionId }}"
+            },
+            {
+              "name": "status",
+              "value": "success"
+            },
+            {
+              "name": "executionId",
+              "value": "={{ $execution.id }}"
+            }
+          ]
+        }
+      },
+      "id": "callback-backend",
+      "name": "Callback to Backend",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 3,
+      "position": [
+        1150,
+        300
+      ]
+    },
+    {
+      "parameters": {
+        "respondWith": "json",
+        "responseBody": "={{ JSON.stringify({ received: true, executionId: $execution.id }) }}"
+      },
+      "id": "respond-webhook",
+      "name": "Respond to Webhook",
+      "type": "n8n-nodes-base.respondToWebhook",
+      "typeVersion": 1,
+      "position": [
+        1350,
+        300
+      ]
+    }
+  ],
+  "connections": {
+    "Webhook Trigger": {
+      "main": [
+        [
+          {
+            "node": "Validate Payload",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Validate Payload": {
+      "main": [
+        [
+          {
+            "node": "Has Task ID?",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Has Task ID?": {
+      "main": [
+        [
+          {
+            "node": "Send WhatsApp",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "Create Calendar Event",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        []
+      ]
+    },
+    "Send WhatsApp": {
+      "main": [
+        [
+          {
+            "node": "Callback to Backend",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Create Calendar Event": {
+      "main": [
+        [
+          {
+            "node": "Callback to Backend",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Callback to Backend": {
+      "main": [
+        [
+          {
+            "node": "Respond to Webhook",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "settings": {
+    "executionOrder": "v1",
+    "saveManualExecutions": true,
+    "saveExecutionProgress": true,
+    "errorWorkflow": ""
+  },
+  "staticData": null,
+  "tags": [
+    "campusflow",
+    "reminders"
+  ],
+  "triggerCount": 0,
+  "meta": {
+    "description": "CampusFlow deadline reminder workflow. Triggered by backend webhook when a task is created with a deadline. Sends WhatsApp notification via Twilio and creates a Google Calendar event. Callbacks to backend to log execution status.",
+    "templateId": "campusflow-deadline-reminder"
+  }
+}
