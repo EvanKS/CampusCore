@@ -1,81 +1,87 @@
-@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap');
 
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
 
 /* ============================================================
-   CampusFlow Academic Design System (Design Tokens)
+   CampusFlow LMS Academic Design System (Design Tokens)
    ============================================================ */
 :root {
-  /* Brand Palette - Deep Academic Blue & Teal Accent */
-  --color-brand-primary: hsl(217, 91%, 48%);
-  --color-brand-secondary: hsl(220, 85%, 36%);
-  --color-brand-light: hsl(217, 91%, 96%);
+  /* Brand Palette - LMS Purple / Violet */
+  --color-brand-primary: #7C3AED;
+  --color-brand-secondary: #6C5CE7;
+  --color-brand-light: #F3E8FF;
 
   /* Surfaces */
-  --bg-page: hsl(210, 24%, 97%);
-  --bg-card: hsl(0, 0%, 100%);
-  --bg-card-hover: hsl(210, 20%, 96%);
-  --bg-sidebar: hsl(222, 47%, 10%);
-  --bg-input: hsl(210, 20%, 96%);
-  --bg-badge: hsl(217, 91%, 95%);
+  --bg-page: #F4F6F9;
+  --bg-card: #FFFFFF;
+  --bg-card-hover: #F8FAFC;
+  --bg-sidebar: #FFFFFF;
+  --bg-input: #F8FAFC;
+  --bg-badge: #F3E8FF;
+
+  /* Header Navbar */
+  --bg-navbar: linear-gradient(135deg, #6C5CE7 0%, #7C3AED 50%, #4F46E5 100%);
 
   /* Borders */
-  --border-default: hsl(214, 25%, 88%);
-  --border-focus: hsl(217, 91%, 50%);
-  --border-subtle: hsl(214, 20%, 92%);
+  --border-default: #E2E8F0;
+  --border-focus: #7C3AED;
+  --border-subtle: #F1F5F9;
 
   /* Text */
-  --text-primary: hsl(222, 47%, 11%);
-  --text-secondary: hsl(215, 20%, 40%);
-  --text-muted: hsl(215, 16%, 58%);
-  --text-brand: hsl(217, 91%, 42%);
+  --text-primary: #0F172A;
+  --text-secondary: #475569;
+  --text-muted: #64748B;
+  --text-brand: #7C3AED;
 
   /* Status Colors */
-  --color-success: hsl(152, 69%, 38%);
-  --color-warning: hsl(38, 92%, 46%);
-  --color-danger: hsl(354, 78%, 54%);
-  --color-info: hsl(199, 89%, 46%);
+  --color-success: #10B981;
+  --color-warning: #F59E0B;
+  --color-danger: #EF4444;
+  --color-info: #06B6D4;
 
   /* Shadows */
   --shadow-sm: 0 1px 2px 0 rgb(15 23 42 / 0.05);
-  --shadow-md: 0 4px 6px -1px rgb(15 23 42 / 0.08), 0 2px 4px -2px rgb(15 23 42 / 0.04);
-  --shadow-lg: 0 10px 25px -5px rgb(15 23 42 / 0.1), 0 8px 10px -6px rgb(15 23 42 / 0.05);
+  --shadow-md: 0 4px 12px -2px rgb(124 58 237 / 0.08), 0 2px 4px -2px rgb(15 23 42 / 0.04);
+  --shadow-lg: 0 10px 25px -5px rgb(124 58 237 / 0.12), 0 8px 10px -6px rgb(15 23 42 / 0.05);
 
   /* Layout Sizes */
-  --sidebar-width: 260px;
-  --sidebar-collapsed: 64px;
+  --sidebar-width: 250px;
+  --sidebar-collapsed: 68px;
 }
 
 .dark {
   /* Brand Palette */
-  --color-brand-primary: hsl(217, 85%, 62%);
-  --color-brand-secondary: hsl(217, 85%, 52%);
-  --color-brand-light: hsl(217, 30%, 18%);
+  --color-brand-primary: #a78bfa;
+  --color-brand-secondary: #8b5cf6;
+  --color-brand-light: rgba(124, 58, 237, 0.15);
 
   /* Surfaces */
-  --bg-page: hsl(222, 47%, 7%);
-  --bg-card: hsl(222, 36%, 11%);
-  --bg-card-hover: hsl(222, 34%, 15%);
-  --bg-sidebar: hsl(222, 45%, 8%);
-  --bg-input: hsl(222, 30%, 14%);
-  --bg-badge: hsl(217, 30%, 18%);
+  --bg-page: #0b0f19;
+  --bg-card: #151c2c;
+  --bg-card-hover: #1e293b;
+  --bg-sidebar: #0f172a;
+  --bg-input: #1e293b;
+  --bg-badge: rgba(124, 58, 237, 0.2);
+
+  /* Header Navbar */
+  --bg-navbar: linear-gradient(135deg, #5b21b6 0%, #6d28d9 50%, #3730a3 100%);
 
   /* Borders */
-  --border-default: hsl(222, 20%, 20%);
-  --border-focus: hsl(217, 85%, 65%);
-  --border-subtle: hsl(222, 20%, 16%);
+  --border-default: #1e293b;
+  --border-focus: #a78bfa;
+  --border-subtle: #151c2c;
 
   /* Text */
-  --text-primary: hsl(210, 40%, 96%);
-  --text-secondary: hsl(215, 20%, 70%);
-  --text-muted: hsl(215, 16%, 52%);
-  --text-brand: hsl(217, 85%, 68%);
+  --text-primary: #f8fafc;
+  --text-secondary: #94a3b8;
+  --text-muted: #64748b;
+  --text-brand: #c4b5fd;
 
   /* Shadows */
   --shadow-sm: 0 1px 3px 0 rgb(0 0 0 / 0.4);
-  --shadow-md: 0 4px 6px -1px rgb(0 0 0 / 0.5);
+  --shadow-md: 0 4px 12px -1px rgb(0 0 0 / 0.5);
   --shadow-lg: 0 10px 25px -5px rgb(0 0 0 / 0.6);
 }
 
@@ -96,13 +102,13 @@ body {
   font-family: 'Inter', system-ui, -apple-system, sans-serif;
   background-color: var(--bg-page);
   color: var(--text-primary);
-  line-height: 1.6;
+  line-height: 1.5;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   transition: background-color 0.2s ease, color 0.2s ease;
 }
 
-/* Focus styles (WCAG AA) */
+/* Focus styles */
 :focus-visible {
   outline: 2px solid var(--border-focus);
   outline-offset: 2px;
@@ -136,7 +142,7 @@ body {
   .card {
     background-color: var(--bg-card);
     border: 1px solid var(--border-default);
-    border-radius: 14px;
+    border-radius: 16px;
     box-shadow: var(--shadow-sm);
     transition: box-shadow 0.2s ease, border-color 0.2s ease, transform 0.2s ease;
   }
@@ -147,20 +153,20 @@ body {
 
   /* Button System */
   .btn {
-    @apply inline-flex items-center justify-center gap-2 rounded-lg px-4 py-2 text-sm font-semibold tracking-wide;
+    @apply inline-flex items-center justify-center gap-2 rounded-xl px-4 py-2 text-xs font-bold tracking-wide;
     @apply transition-all duration-150 cursor-pointer select-none;
     @apply disabled:opacity-50 disabled:cursor-not-allowed;
   }
 
   .btn-primary {
-    @apply btn text-white shadow-sm;
-    background: linear-gradient(135deg, hsl(217, 91%, 48%), hsl(220, 85%, 40%));
+    @apply btn text-white shadow-md shadow-purple-500/20;
+    background: linear-gradient(135deg, #7C3AED 0%, #6C5CE7 100%);
   }
 
   .btn-primary:hover:not(:disabled) {
-    background: linear-gradient(135deg, hsl(217, 91%, 44%), hsl(220, 85%, 34%));
+    background: linear-gradient(135deg, #6D28D9 0%, #5B21B6 100%);
     transform: translateY(-1px);
-    box-shadow: 0 4px 12px rgba(37, 99, 235, 0.25);
+    box-shadow: 0 6px 16px rgba(124, 58, 237, 0.35);
   }
 
   .btn-secondary {
@@ -189,7 +195,7 @@ body {
 
   .btn-danger {
     @apply btn text-white shadow-sm;
-    background: linear-gradient(135deg, hsl(354, 78%, 54%), hsl(354, 80%, 44%));
+    background: linear-gradient(135deg, #ef4444 0%, #dc2626 100%);
   }
 
   .btn-danger:hover:not(:disabled) {
@@ -199,7 +205,7 @@ body {
 
   /* Inputs & Forms */
   .input {
-    @apply w-full rounded-xl px-3.5 py-2.5 text-sm transition-all duration-150;
+    @apply w-full rounded-xl px-3.5 py-2.5 text-xs font-medium transition-all duration-150;
     background-color: var(--bg-input);
     border: 1px solid var(--border-default);
     color: var(--text-primary);
@@ -208,7 +214,7 @@ body {
   .input:focus {
     outline: none;
     border-color: var(--border-focus);
-    box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.15);
+    box-shadow: 0 0 0 3px rgba(124, 58, 237, 0.15);
     background-color: var(--bg-card);
   }
 
@@ -217,13 +223,13 @@ body {
   }
 
   .label {
-    @apply block text-xs font-semibold uppercase tracking-wider mb-1.5;
+    @apply block text-[11px] font-bold uppercase tracking-wider mb-1.5;
     color: var(--text-secondary);
   }
 
   /* Badges */
   .badge {
-    @apply inline-flex items-center gap-1 rounded-full px-2.5 py-0.5 text-xs font-semibold tracking-wide uppercase;
+    @apply inline-flex items-center gap-1 rounded-full px-2.5 py-0.5 text-[10px] font-bold tracking-wider uppercase;
   }
 
   .badge-brand {
@@ -250,35 +256,39 @@ body {
 
   /* Navigation Item */
   .nav-item {
-    @apply flex items-center gap-3 rounded-xl px-3.5 py-2.5 text-sm font-medium transition-all duration-150;
-    color: hsl(215, 20%, 75%);
+    @apply flex items-center gap-3 rounded-xl px-3.5 py-2.5 text-xs font-medium transition-all duration-150;
+    color: var(--text-secondary);
   }
 
   .nav-item:hover {
-    background-color: rgba(255, 255, 255, 0.08);
-    color: white;
+    background-color: rgba(124, 58, 237, 0.08);
+    color: var(--color-brand-primary);
   }
 
   .nav-item.active {
-    background: linear-gradient(135deg, hsl(217, 91%, 48%), hsl(220, 85%, 40%));
-    color: white;
-    font-weight: 600;
-    box-shadow: 0 4px 12px rgba(37, 99, 235, 0.25);
+    background: linear-gradient(135deg, #7C3AED 0%, #6C5CE7 100%);
+    color: white !important;
+    font-weight: 700;
+    box-shadow: 0 4px 14px rgba(124, 58, 237, 0.3);
+  }
+
+  .nav-item.active svg {
+    color: white !important;
   }
 
   /* Page Header */
   .page-header {
-    @apply mb-6;
+    @apply mb-4;
   }
 
   .page-title {
-    @apply text-2xl sm:text-3xl font-extrabold tracking-tight;
+    @apply text-xl sm:text-2xl font-black tracking-tight;
     color: var(--text-primary);
   }
 
   .page-subtitle {
-    @apply text-sm mt-1 font-normal;
-    color: var(--text-secondary);
+    @apply text-xs mt-0.5 font-medium;
+    color: var(--text-muted);
   }
 
   /* Stat Card */
@@ -288,13 +298,13 @@ body {
 
   /* Tables */
   .table-wrapper {
-    @apply overflow-x-auto rounded-xl;
+    @apply overflow-x-auto rounded-2xl;
     border: 1px solid var(--border-default);
     background-color: var(--bg-card);
   }
 
   table {
-    @apply w-full text-sm border-collapse;
+    @apply w-full text-xs border-collapse;
   }
 
   thead {
@@ -302,12 +312,12 @@ body {
   }
 
   th {
-    @apply px-4 py-3.5 text-left text-xs font-bold tracking-wider uppercase;
+    @apply px-4 py-3 text-left text-[10px] font-extrabold tracking-wider uppercase;
     color: var(--text-muted);
   }
 
   td {
-    @apply px-4 py-3.5;
+    @apply px-4 py-3;
     color: var(--text-primary);
     border-top: 1px solid var(--border-subtle);
   }
@@ -328,7 +338,7 @@ body {
 
   .progress-fill {
     @apply h-full rounded-full transition-all duration-500;
-    background: linear-gradient(90deg, var(--color-brand-primary), #0284c7);
+    background: linear-gradient(90deg, #7C3AED, #06B6D4);
   }
 
   /* Spinner */
@@ -336,3 +346,4 @@ body {
     @apply inline-block rounded-full border-2 border-current border-t-transparent animate-spin;
   }
 }
+

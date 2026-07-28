@@ -108,7 +108,7 @@ export function startDeadlineWorker(): void {
         endTime: new Date(deadline.getTime() + 3600000).toISOString(),
       });
 
-      const message = `⏰ *CampusFlow Reminder*\n\nYour task *"${title}"* is due in 24 hours!\n📅 Deadline: ${formattedDeadline}\n\n📅 *Add to Google Calendar:* ${gcalUrl}\n\nStay on track! 💪`;
+      const message = `⏰ *CampusCore Reminder*\n\nYour task *"${title}"* is due in 24 hours!\n📅 Deadline: ${formattedDeadline}\n\n📅 *Add to Google Calendar:* ${gcalUrl}\n\nStay on track! 💪`;
 
       const prefs = user.notification_prefs as { whatsapp?: boolean; email?: boolean } | null;
       // Default whatsapp to true if prefs not set (opt-out model)

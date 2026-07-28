@@ -12,6 +12,8 @@ import { zodResolver } from '@hookform/resolvers/zod';
 import { z } from 'zod';
 import { DEMO_NOTICES } from '@/lib/demoData';
 
+import { PageHeader } from '@/components/layout/PageHeader';
+
 interface Notice {
   id: string;
   title: string;
@@ -39,6 +41,7 @@ export default function NoticesPage() {
   const [showForm, setShowForm] = useState(false);
   const [selectedNotice, setSelectedNotice] = useState<Notice | null>(null);
   const [demoNotices, setDemoNotices] = useState<Notice[]>(DEMO_NOTICES as Notice[]);
+
 
   const { data, isLoading } = useQuery({
     queryKey: ['notices'],
@@ -76,21 +79,21 @@ export default function NoticesPage() {
 
   return (
     <div className="space-y-6 animate-fade-in">
-      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
-        <div className="page-header mb-0">
-          <h1 className="page-title flex items-center gap-2">
-            <Bell className="w-7 h-7 text-blue-600 dark:text-blue-400" />
-            Campus Notices & Bulletins
-          </h1>
-          <p className="page-subtitle">Official announcements, AI summaries, and automated broadcasts.</p>
-        </div>
-        {(user?.role === 'teacher' || user?.role === 'admin') && (
-          <button className="btn-primary shrink-0 shadow-md" onClick={() => setShowForm(true)}>
-            <Plus className="w-4 h-4" />
-            Post Notice
-          </button>
-        )}
-      </div>
+      <PageHeader
+        title="Campus Notices & Bulletins"
+        category="Account"
+        breadcrumb="Notices"
+        actions={
+          (user?.role === 'teacher' || user?.role === 'admin') ? (
+            <button className="btn-primary shrink-0 shadow-md" onClick={() => setShowForm(true)}>
+              <Plus className="w-4 h-4" />
+              Post Notice
+            </button>
+          ) : undefined
+        }
+      />
+
+
 
       {/* AI info banner for teachers/admin */}
       {(user?.role === 'teacher' || user?.role === 'admin') && (

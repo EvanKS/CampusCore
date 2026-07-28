@@ -48,6 +48,10 @@ const statusColors: Record<string, string> = {
   overdue: 'badge-danger',
 };
 
+import { PageHeader } from '@/components/layout/PageHeader';
+
+// ... (schema and types remain untouched)
+
 export default function TasksPage() {
   const { user, isDemoMode } = useAuth();
   const toast = useToast();
@@ -103,6 +107,8 @@ export default function TasksPage() {
     onError: (err: { response?: { data?: { error?: string } }; message?: string }) => {
       toast('error', err?.response?.data?.error || err?.message || 'Failed to create task');
     },
+
+
   });
 
   const updateMutation = useMutation({
@@ -139,22 +145,23 @@ export default function TasksPage() {
 
   return (
     <div className="space-y-6 animate-fade-in">
-      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
-        <div className="page-header mb-0">
-          <h1 className="page-title">Tasks & Deadlines</h1>
-          <p className="page-subtitle">Manage your assignment deadlines and schedule reminders.</p>
-        </div>
-        {user?.role === 'student' && (
-          <button
-            className="btn-primary shrink-0 shadow-md"
-            onClick={() => { setShowForm(true); setEditTask(null); }}
-            aria-label="Add new task"
-          >
-            <Plus className="w-4 h-4" />
-            Add Task
-          </button>
-        )}
-      </div>
+      <PageHeader
+        title="Tasks & Deadlines"
+        category="Academics"
+        breadcrumb="Assignments"
+        actions={
+          user?.role === 'student' ? (
+            <button
+              className="btn-primary shrink-0 shadow-md"
+              onClick={() => { setShowForm(true); setEditTask(null); }}
+              aria-label="Add new task"
+            >
+              <Plus className="w-4 h-4" />
+              Add Task
+            </button>
+          ) : undefined
+        }
+      />
 
       {/* Filter tabs */}
       <div className="flex gap-2 flex-wrap" role="tablist" aria-label="Filter tasks by status">
@@ -163,18 +170,18 @@ export default function TasksPage() {
             key={s || 'all'}
             role="tab"
             aria-selected={filter === s}
-            className={`badge cursor-pointer transition-all px-3 py-1.5 ${
+            className={`badge cursor-pointer transition-all px-3.5 py-2 text-xs rounded-xl font-bold ${
               filter === s
-                ? 'badge-brand font-extrabold shadow-sm'
-                : 'bg-[var(--bg-card)] border border-[var(--border-default)] hover:border-blue-500'
+                ? 'bg-purple-600 text-white shadow-md shadow-purple-500/20'
+                : 'bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 text-slate-600 dark:text-slate-400 hover:border-purple-500'
             }`}
             onClick={() => setFilter(s)}
-            style={{ color: filter === s ? 'var(--text-brand)' : 'var(--text-secondary)' }}
           >
             {s ? s.replace('_', ' ') : 'All Tasks'}
           </button>
         ))}
       </div>
+
 
       {/* Task form modal */}
       {(showForm || editTask) && (
@@ -260,7 +267,7 @@ export default function TasksPage() {
                     <a
                       href={
                         task.google_calendar_url ||
-                        `https://calendar.google.com/calendar/render?action=TEMPLATE&text=${encodeURIComponent('[CampusFlow] ' + task.title)}&details=${encodeURIComponent(task.description || '')}&dates=${new Date(task.deadline_at || Date.now()).toISOString().replace(/-|:|\.\d\d\d/g, '')}/${new Date((new Date(task.deadline_at || Date.now())).getTime() + 3600000).toISOString().replace(/-|:|\.\d\d\d/g, '')}`
+                        `https://calendar.google.com/calendar/render?action=TEMPLATE&text=${encodeURIComponent('[CampusCore] ' + task.title)}&details=${encodeURIComponent(task.description || '')}&dates=${new Date(task.deadline_at || Date.now()).toISOString().replace(/-|:|\.\d\d\d/g, '')}/${new Date((new Date(task.deadline_at || Date.now())).getTime() + 3600000).toISOString().replace(/-|:|\.\d\d\d/g, '')}`
                       }
                       target="_blank"
                       rel="noopener noreferrer"

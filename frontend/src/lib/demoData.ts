@@ -106,7 +106,7 @@ export const DEMO_NOTICES = [
   {
     id: 'notice-2',
     title: 'Annual Technical Fest - TechNova 2024',
-    body: 'CampusFlow Demo University proudly presents TechNova 2024, our annual technical festival. Events include coding competitions, hackathons, robotics competitions, and technical paper presentations. Registration closes October 10th. Prize pool: ₹5,00,000.',
+    body: 'CampusCore Demo University proudly presents TechNova 2024, our annual technical festival. Events include coding competitions, hackathons, robotics competitions, and technical paper presentations. Registration closes October 10th. Prize pool: ₹5,00,000.',
     ai_summary: '• TechNova 2024 tech fest announced\n• Events: coding, hackathon, robotics, papers\n• Registration by Oct 10; prize pool ₹5L',
     target_scope: 'all',
     author_name: 'Dr. Admin Singh',

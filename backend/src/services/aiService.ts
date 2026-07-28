@@ -153,7 +153,7 @@ export async function chatWithStudyBuddy(params: {
   notesContext: string;
 }): Promise<string> {
   const groq = getGroqClient();
-  const systemPrompt = `You are CampusFlow Study Buddy, a helpful AI tutor.
+  const systemPrompt = `You are CampusCore Study Buddy, a helpful AI tutor.
 You help students understand their study notes, answer questions, and explain concepts.
 ${params.notesContext ? `Here are the student's notes you can reference:\n\n${params.notesContext}` : ''}
 Be concise, encouraging, and academically accurate.`;

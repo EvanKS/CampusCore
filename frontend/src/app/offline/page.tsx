@@ -36,7 +36,7 @@ export default function OfflinePage() {
           You&apos;re offline
         </h1>
         <p style={{ color: 'var(--text-secondary)', fontSize: '0.95rem', marginBottom: '24px', lineHeight: '1.6' }}>
-          CampusFlow couldn&apos;t reach the server. Your cached dashboard and tasks are still available —
+          CampusCore couldn&apos;t reach the server. Your cached dashboard and tasks are still available —
           reconnect to sync changes.
         </p>
         <button

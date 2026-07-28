@@ -10,6 +10,8 @@ import {
   GraduationCap, Upload, Download, CheckCircle,
   FileSpreadsheet, Layers
 } from 'lucide-react';
+import { PageHeader } from '@/components/layout/PageHeader';
+
 
 interface AssignedTeacher {
   assignmentId: string;
@@ -276,30 +278,28 @@ export default function AdminSubjectsPage() {
   };
 
   return (
+
     <div className="space-y-6 animate-fade-in">
-      {/* Header */}
-      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
-        <div className="page-header mb-0">
-          <h1 className="page-title flex items-center gap-2">
-            <BookOpen className="w-6 h-6" style={{ color: 'var(--color-brand-primary)' }} />
-            Academic Management & Assignments Hub
-          </h1>
-          <p className="page-subtitle">Assign teachers to subjects, enroll student classes, and bulk import users.</p>
-        </div>
-        <div className="flex gap-2">
-          <button className="btn-secondary" onClick={() => setShowBulkEnrollModal(true)}>
-            <Layers className="w-4 h-4" />
-            Enroll Class
-          </button>
-          <button className="btn-primary" onClick={() => setShowAddSubject(true)}>
-            <Plus className="w-4 h-4" />
-            Add Subject
-          </button>
-        </div>
-      </div>
+      <PageHeader
+        title="Academic Management & Assignments Hub"
+        category="Management"
+        breadcrumb="Course Subjects"
+        actions={
+          <div className="flex gap-2">
+            <button className="btn-secondary text-xs font-bold" onClick={() => setShowBulkEnrollModal(true)}>
+              <Layers className="w-4 h-4" />
+              Enroll Class
+            </button>
+            <button className="btn-primary text-xs font-extrabold shadow-md" onClick={() => setShowAddSubject(true)}>
+              <Plus className="w-4 h-4" />
+              Add Subject
+            </button>
+          </div>
+        }
+      />
 
       {/* Tabs */}
-      <div className="flex gap-2 border-b" style={{ borderColor: 'var(--border-default)' }}>
+      <div className="flex gap-1.5 p-1.5 rounded-2xl bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 shadow-sm">
         {[
           { id: 'subjects', label: 'Subjects & Faculty', icon: <BookOpen className="w-4 h-4" /> },
           { id: 'enrollments', label: 'Class & Student Enrollments', icon: <GraduationCap className="w-4 h-4" /> },
@@ -307,18 +307,19 @@ export default function AdminSubjectsPage() {
         ].map(t => (
           <button
             key={t.id}
-            className={`flex items-center gap-2 py-3 px-4 text-sm font-medium border-b-2 transition-all ${
+            className={`flex-1 flex items-center justify-center gap-2 py-2.5 px-3 rounded-xl text-xs font-black transition-all ${
               activeTab === t.id
-                ? 'border-[var(--color-brand-primary)] text-[var(--color-brand-primary)]'
-                : 'border-transparent hover:text-[var(--text-primary)]'
+                ? 'bg-purple-600 text-white shadow-md shadow-purple-500/20'
+                : 'text-slate-600 dark:text-slate-400 hover:text-purple-600 hover:bg-purple-50 dark:hover:bg-slate-800'
             }`}
             onClick={() => setActiveTab(t.id as AdminTab)}
           >
             {t.icon}
-            {t.label}
+            <span>{t.label}</span>
           </button>
         ))}
       </div>
+
 
       {/* ====== TAB 1: SUBJECTS & FACULTY ASSIGNMENTS ====== */}
       {activeTab === 'subjects' && (

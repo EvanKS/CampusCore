@@ -95,7 +95,20 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   const [isDemoMode, setIsDemoMode] = useState(false);
 
   const fetchUser = useCallback(async () => {
-    // Check demo mode first
+    const token = localStorage.getItem('campusflow_access_token');
+    if (token) {
+      try {
+        const { data } = await api.get<User>('/auth/me');
+        setUser(data);
+        setIsDemoMode(false);
+        localStorage.removeItem('campusflow_demo_user');
+        return;
+      } catch {
+        // Token expired or invalid, fall through
+      }
+    }
+
+    // Fallback to demo mode if demo user flag exists and no valid token
     const demoEmail = localStorage.getItem('campusflow_demo_user');
     if (demoEmail && DEMO_USERS[demoEmail]) {
       setUser(DEMO_USERS[demoEmail]);
@@ -103,14 +116,8 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
       return;
     }
 
-    try {
-      const { data } = await api.get<User>('/auth/me');
-      setUser(data);
-      setIsDemoMode(false);
-    } catch {
-      setUser(null);
-      setIsDemoMode(false);
-    }
+    setUser(null);
+    setIsDemoMode(false);
   }, []);
 
   useEffect(() => {
@@ -124,16 +131,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   }, [fetchUser]);
 
   const login = async (email: string, password: string) => {
-    // Demo mode: no backend needed
-    const demoUser = DEMO_USERS[email];
-    if (demoUser && DEMO_PASSWORDS[email] === password) {
-      localStorage.setItem('campusflow_demo_user', email);
-      setUser(demoUser);
-      setIsDemoMode(true);
-      return;
-    }
-
-    // Try real backend
+    // Try real backend API first
     try {
       const { data } = await api.post('/auth/login', { email, password });
       localStorage.setItem('campusflow_access_token', data.accessToken);
@@ -141,16 +139,26 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
       localStorage.removeItem('campusflow_demo_user');
       setIsDemoMode(false);
       await fetchUser();
+      return;
     } catch (err: unknown) {
-      // If backend is unreachable and not a demo user, rethrow
+      // If real backend failed, check if it's a demo account fallback
+      const demoUser = DEMO_USERS[email];
+      if (demoUser && DEMO_PASSWORDS[email] === password) {
+        localStorage.setItem('campusflow_demo_user', email);
+        setUser(demoUser);
+        setIsDemoMode(true);
+        return;
+      }
+
       const isNetworkError = (err as { code?: string })?.code === 'ERR_NETWORK'
         || (err as { message?: string })?.message?.includes('Network Error');
       if (isNetworkError) {
-        throw new Error('Backend unreachable. Use a demo account to explore the UI.');
+        throw new Error('Backend unreachable at http://localhost:4000. Ensure backend server is running.');
       }
       throw err;
     }
   };
+
 
   const loginWithGoogle = async (
     idToken: string,

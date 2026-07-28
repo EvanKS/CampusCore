@@ -64,7 +64,7 @@ tasksRouter.get('/', asyncHandler(async (req: Request, res: Response) => {
       subject_code: (t.subjects as Record<string, string> | null)?.code,
       subjects: undefined,
       google_calendar_url: generateGoogleCalendarUrl({
-        title: `[CampusFlow] ${t.title}`,
+        title: `[CampusCore] ${t.title}`,
         description: (t.description as string) || `Task Deadline for ${t.title}`,
         startTime,
         endTime,
@@ -132,7 +132,7 @@ tasksRouter.post('/', authorize('student'), asyncHandler(async (req: Request, re
   const endTime = new Date(new Date(finalDeadline).getTime() + 60 * 60 * 1000).toISOString();
   try {
     await createCalendarEvent({
-      title: `[CampusFlow] ${task.title as string}`,
+      title: `[CampusCore] ${task.title as string}`,
       description: (task.description as string) || `Task Deadline for ${task.title as string}`,
       startTime: finalDeadline,
       endTime: endTime,
@@ -143,7 +143,7 @@ tasksRouter.post('/', authorize('student'), asyncHandler(async (req: Request, re
 
   // 2. Generate Google Calendar invite URL for other users
   const gcalUrl = generateGoogleCalendarUrl({
-    title: `[CampusFlow] ${task.title as string}`,
+    title: `[CampusCore] ${task.title as string}`,
     description: (task.description as string) || `Task Deadline for ${task.title as string}`,
     startTime: finalDeadline,
     endTime: endTime,
@@ -155,7 +155,7 @@ tasksRouter.post('/', authorize('student'), asyncHandler(async (req: Request, re
     const phone = userData?.phone || '+919611789501';
 
     const formattedDeadline = new Date(finalDeadline).toLocaleString('en-IN', { timeZone: 'Asia/Kolkata' });
-    const message = `⏰ *CampusFlow Reminder*\n\nYour task *"${task.title as string}"* is created!\n📅 Deadline: ${formattedDeadline}\n\n📅 *Add to Google Calendar:* ${gcalUrl}\n\nStay on track! 💪`;
+    const message = `⏰ *CampusCore Reminder*\n\nYour task *"${task.title as string}"* is created!\n📅 Deadline: ${formattedDeadline}\n\n📅 *Add to Google Calendar:* ${gcalUrl}\n\nStay on track! 💪`;
 
     // Direct WhatsApp send
     await sendWhatsAppAlert(phone, message);

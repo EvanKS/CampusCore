@@ -6,8 +6,11 @@ import api from '@/lib/api';
 import { useToast } from '@/components/ui/Toaster';
 import { useAuth } from '@/contexts/AuthContext';
 import { DEMO_NOTES } from '@/lib/demoData';
-import { Send, Sparkles, BookOpen, Plus, Loader2, Bot, User, X, Brain } from 'lucide-react';
+import { Send, BookOpen, Plus, Loader2, Bot, User, X, Brain } from 'lucide-react';
+
 import { v4 as uuid } from 'uuid';
+
+import { PageHeader } from '@/components/layout/PageHeader';
 
 interface Message {
   role: 'user' | 'assistant';
@@ -36,7 +39,7 @@ export default function StudyBuddyPage() {
   const [tab, setTab] = useState<Tab>('chat');
   const [sessionId] = useState(uuid());
   const [messages, setMessages] = useState<Message[]>([
-    { role: 'assistant', content: "Hi! I'm your CampusFlow AI Study Buddy 👋 Ask me questions about your coursework, upload notes to generate flashcards, or practice quiz questions." }
+    { role: 'assistant', content: "Hi! I'm your CampusCore AI Study Buddy 👋 Ask me questions about your coursework, upload notes to generate flashcards, or practice quiz questions." }
   ]);
   const [input, setInput] = useState('');
   const [newNote, setNewNote] = useState({ title: '', content: '', subjectId: '' });
@@ -46,6 +49,7 @@ export default function StudyBuddyPage() {
   const messagesEndRef = useRef<HTMLDivElement>(null);
   const toast = useToast();
   const qc = useQueryClient();
+
 
   useEffect(() => {
     messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
@@ -165,33 +169,32 @@ export default function StudyBuddyPage() {
 
   return (
     <div className="space-y-5 animate-fade-in">
-      <div className="page-header mb-0">
-        <h1 className="page-title flex items-center gap-2">
-          <Sparkles className="w-7 h-7 text-blue-600 dark:text-blue-400" />
-          AI Study Buddy
-        </h1>
-        <p className="page-subtitle">Powered by Groq (Llama 3.3) with Gemini fallback for notes Q&A and flashcard generation.</p>
-      </div>
+      <PageHeader
+        title="AI Study Buddy"
+        category="Tools & AI"
+        breadcrumb="Study Companion"
+      />
 
       {/* Tabs Header */}
-      <div className="flex gap-1.5 p-1.5 rounded-2xl bg-[var(--bg-input)] border border-[var(--border-default)]" role="tablist">
+      <div className="flex gap-1.5 p-1.5 rounded-2xl bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 shadow-sm" role="tablist">
         {tabs.map(t => (
           <button
             key={t.id}
             role="tab"
             aria-selected={tab === t.id}
-            className={`flex-1 flex items-center justify-center gap-2 py-2.5 rounded-xl text-xs sm:text-sm font-bold transition-all ${
-              tab === t.id
-                ? 'bg-blue-600 text-white shadow-md'
-                : 'text-[var(--text-secondary)] hover:text-[var(--text-primary)] hover:bg-[var(--bg-card-hover)]'
-            }`}
             onClick={() => setTab(t.id)}
+            className={`flex-1 py-2.5 px-4 rounded-xl text-xs font-black flex items-center justify-center gap-2 transition-all ${
+              tab === t.id
+                ? 'bg-purple-600 text-white shadow-md shadow-purple-500/20'
+                : 'text-slate-600 dark:text-slate-400 hover:text-purple-600 hover:bg-purple-50 dark:hover:bg-slate-800'
+            }`}
           >
             {t.icon}
             <span>{t.label}</span>
           </button>
         ))}
       </div>
+
 
       {/* CHAT TAB */}
       {tab === 'chat' && (

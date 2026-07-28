@@ -95,7 +95,7 @@ app.use(errorHandler);
 // Start server
 // ============================================================
 app.listen(PORT, () => {
-  logger.info(`CampusFlow backend running on port ${PORT}`);
+  logger.info(`CampusCore backend running on port ${PORT}`);
   logger.info(`Environment: ${process.env.NODE_ENV || 'development'}`);
 });
 

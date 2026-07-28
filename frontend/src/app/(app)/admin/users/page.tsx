@@ -5,9 +5,12 @@ import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import api from '@/lib/api';
 import { useToast } from '@/components/ui/Toaster';
 import {
-  Users, Upload, Search, Loader2, X, Shield, Trash2,
+  Upload, Search, Loader2, X, Shield, Trash2,
   ChevronLeft, ChevronRight, CheckCircle, AlertCircle,
 } from 'lucide-react';
+
+import { PageHeader } from '@/components/layout/PageHeader';
+
 import { useRef } from 'react';
 
 interface User {
@@ -86,14 +89,23 @@ export default function AdminUsersPage() {
   const totalPages = Math.ceil((data?.total ?? 0) / 20) || 1;
 
   return (
+
     <div className="space-y-6 animate-fade-in">
-      <div className="page-header">
-        <h1 className="page-title flex items-center gap-2">
-          <Users className="w-7 h-7 text-blue-600 dark:text-blue-400" />
-          User Directory & Management
-        </h1>
-        <p className="page-subtitle">Manage all student, faculty, parent, and admin user profiles.</p>
-      </div>
+      <PageHeader
+        title="User Directory & Management"
+        category="Management"
+        breadcrumb="User Directory"
+        actions={
+          <button
+            className="btn-primary text-xs font-extrabold shadow-md shrink-0"
+            onClick={() => { setShowImport(true); setImportResult(null); }}
+          >
+            <Upload className="w-4 h-4" />
+            CSV Onboarding Import
+          </button>
+        }
+      />
+
 
       {/* Actions bar */}
       <div className="flex flex-col sm:flex-row gap-3">

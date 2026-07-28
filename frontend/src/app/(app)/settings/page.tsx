@@ -5,7 +5,10 @@ import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import api from '@/lib/api';
 import { useAuth } from '@/contexts/AuthContext';
 import { useToast } from '@/components/ui/Toaster';
-import { Settings, User, Bell, Shield, Save, Loader2, Eye, EyeOff } from 'lucide-react';
+import { User, Bell, Shield, Save, Loader2, Eye, EyeOff } from 'lucide-react';
+import { PageHeader } from '@/components/layout/PageHeader';
+
+
 
 type SettingsTab = 'profile' | 'notifications' | 'security';
 
@@ -78,18 +81,17 @@ export default function SettingsPage() {
   const currentPrefs: NotificationPrefs = prefs?.data ?? { email: true, whatsapp: true, in_app: true };
 
   return (
-    <div className="space-y-6 animate-fade-in max-w-2xl">
-      <div className="page-header">
-        <h1 className="page-title flex items-center gap-2">
-          <Settings className="w-7 h-7 text-blue-600 dark:text-blue-400" />
-          User Account Settings
-        </h1>
-        <p className="page-subtitle">Manage personal profile details, preferences, and password security.</p>
-      </div>
+    <div className="space-y-6 animate-fade-in max-w-3xl">
+      <PageHeader
+
+        title="User Account Settings"
+        category="Account"
+        breadcrumb="Settings"
+      />
 
       {/* Tab switcher */}
       <div
-        className="flex gap-1.5 p-1.5 rounded-2xl bg-[var(--bg-input)] border border-[var(--border-default)]"
+        className="flex gap-1.5 p-1.5 rounded-2xl bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 shadow-sm"
         role="tablist"
       >
         {tabs.map(t => (
@@ -97,10 +99,10 @@ export default function SettingsPage() {
             key={t.id}
             role="tab"
             aria-selected={tab === t.id}
-            className={`flex-1 flex items-center justify-center gap-2 py-2.5 rounded-xl text-xs sm:text-sm font-bold transition-all ${
+            className={`flex-1 flex items-center justify-center gap-2 py-2.5 rounded-xl text-xs font-black transition-all ${
               tab === t.id
-                ? 'bg-blue-600 text-white shadow-md'
-                : 'text-[var(--text-secondary)] hover:text-[var(--text-primary)] hover:bg-[var(--bg-card-hover)]'
+                ? 'bg-purple-600 text-white shadow-md shadow-purple-500/20'
+                : 'text-slate-600 dark:text-slate-400 hover:text-purple-600 hover:bg-purple-50 dark:hover:bg-slate-800'
             }`}
             onClick={() => setTab(t.id)}
           >
@@ -110,7 +112,9 @@ export default function SettingsPage() {
         ))}
       </div>
 
+
       {/* Profile tab */}
+
       {tab === 'profile' && (
         <div className="card p-6 space-y-5 animate-fade-in shadow-sm">
           {/* Avatar */}
@@ -181,7 +185,7 @@ export default function SettingsPage() {
             [
               { key: 'email' as const, label: 'Email Notifications', desc: 'Receive daily digests & critical notice dispatches' },
               { key: 'whatsapp' as const, label: 'WhatsApp Notifications', desc: 'Receive instant task reminders & low attendance warnings' },
-              { key: 'in_app' as const, label: 'In-App Notifications', desc: 'Display badge notifications inside CampusFlow' },
+              { key: 'in_app' as const, label: 'In-App Notifications', desc: 'Display badge notifications inside CampusCore' },
             ] as const
           ).map(({ key, label, desc }) => (
             <div key={key} className="flex items-center justify-between p-4 rounded-xl border border-[var(--border-default)]" style={{ background: 'var(--bg-input)' }}>

@@ -10,35 +10,40 @@ const config: Config = {
   theme: {
     extend: {
       fontFamily: {
-        sans: ['Inter', 'system-ui', 'sans-serif'],
+        sans: ['Inter', 'system-ui', '-apple-system', 'sans-serif'],
       },
       colors: {
         brand: {
-          50: 'hsl(217, 91%, 97%)',
-          100: 'hsl(217, 91%, 92%)',
-          200: 'hsl(217, 88%, 84%)',
-          300: 'hsl(217, 85%, 72%)',
-          400: 'hsl(217, 82%, 60%)',
-          500: 'hsl(217, 91%, 50%)',
-          600: 'hsl(217, 91%, 42%)',
-          700: 'hsl(220, 85%, 32%)',
-          800: 'hsl(222, 80%, 24%)',
-          900: 'hsl(222, 75%, 16%)',
-          950: 'hsl(222, 70%, 10%)',
+          50: '#f5f3ff',
+          100: '#ede9fe',
+          200: '#ddd6fe',
+          300: '#c4b5fd',
+          400: '#a78bfa',
+          500: '#8b5cf6',
+          600: '#7c3aed',
+          700: '#6d28d9',
+          800: '#5b21b6',
+          900: '#4c1d95',
+          950: '#2e1065',
         },
-        academic: {
-          navy: '#0f172a',
-          blue: '#1e3a8a',
-          teal: '#0d9488',
-          cyan: '#0284c7',
-          amber: '#d97706',
-          gold: '#b45309',
+        lms: {
+          purple: '#6C5CE7',
+          violet: '#7C3AED',
+          pink: '#EC4899',
+          magenta: '#E11D48',
+          blue: '#2563EB',
+          cyan: '#06B6D4',
+          teal: '#0D9488',
+          emerald: '#10B981',
+          amber: '#F59E0B',
+          navy: '#0F172A',
         },
       },
       animation: {
         'fade-in': 'fadeIn 0.2s ease-in-out',
         'slide-up': 'slideUp 0.3s ease-out',
         'slide-in': 'slideIn 0.3s ease-out',
+        'pulse-subtle': 'pulseSubtle 2s infinite ease-in-out',
       },
       keyframes: {
         fadeIn: {
@@ -53,6 +58,10 @@ const config: Config = {
           '0%': { opacity: '0', transform: 'translateX(-8px)' },
           '100%': { opacity: '1', transform: 'translateX(0)' },
         },
+        pulseSubtle: {
+          '0%, 100%': { opacity: '1' },
+          '50%': { opacity: '0.7' },
+        },
       },
     },
   },
@@ -60,3 +69,4 @@ const config: Config = {
 };
 
 export default config;
+

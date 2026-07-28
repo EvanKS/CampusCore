@@ -6,6 +6,8 @@ import { useToast } from '@/components/ui/Toaster';
 import { Bell, Check, Loader2 } from 'lucide-react';
 import { formatDistanceToNow } from 'date-fns';
 
+import { PageHeader } from '@/components/layout/PageHeader';
+
 export default function NotificationsPage() {
   const toast = useToast();
   const qc = useQueryClient();
@@ -33,28 +35,24 @@ export default function NotificationsPage() {
 
   return (
     <div className="space-y-6 animate-fade-in max-w-4xl">
-      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
-        <div className="page-header mb-0">
-          <h1 className="page-title flex items-center gap-2">
-            <Bell className="w-7 h-7 text-blue-600 dark:text-blue-400" />
-            Notification Center
-            {unreadCount > 0 && (
-              <span className="badge badge-danger text-xs font-black ml-2 px-2.5 py-0.5">{unreadCount} UNREAD</span>
-            )}
-          </h1>
-          <p className="page-subtitle">Academic updates, deadline reminders, and broadcast alerts.</p>
-        </div>
-        {unreadCount > 0 && (
-          <button
-            className="btn-secondary text-xs font-bold shrink-0 shadow-sm"
-            onClick={() => readAllMutation.mutate()}
-            disabled={readAllMutation.isPending}
-          >
-            <Check className="w-4 h-4 text-emerald-500" />
-            Mark All as Read
-          </button>
-        )}
-      </div>
+      <PageHeader
+        title="Notification Center"
+        category="Account"
+        breadcrumb="Notifications"
+        actions={
+          unreadCount > 0 ? (
+            <button
+              className="btn-primary text-xs font-extrabold shrink-0 shadow-sm"
+              onClick={() => readAllMutation.mutate()}
+              disabled={readAllMutation.isPending}
+            >
+              <Check className="w-4 h-4 text-white" />
+              Mark All as Read ({unreadCount})
+            </button>
+          ) : undefined
+        }
+      />
+
 
       {isLoading ? (
         <div className="flex justify-center py-12">

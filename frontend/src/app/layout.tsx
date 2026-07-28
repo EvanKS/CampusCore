@@ -4,24 +4,24 @@ import { Providers } from './providers';
 
 export const metadata: Metadata = {
   title: {
-    template: '%s | CampusFlow',
-    default: 'CampusFlow — Campus Productivity Platform',
+    template: '%s | CampusCore',
+    default: 'CampusCore — The Connected Campus Platform',
   },
   description:
-    'CampusFlow is a production-grade, multi-tenant campus productivity platform for students, teachers, parents, and college administrators.',
-  keywords: ['campus', 'productivity', 'attendance', 'tasks', 'study', 'university'],
-  authors: [{ name: 'CampusFlow' }],
+    'CampusCore is a production-grade, multi-tenant campus productivity platform for students, teachers, parents, and college administrators.',
+  keywords: ['campus', 'productivity', 'attendance', 'tasks', 'study', 'university', 'campuscore'],
+  authors: [{ name: 'CampusCore' }],
   manifest: '/manifest.json',
   appleWebApp: {
     capable: true,
     statusBarStyle: 'default',
-    title: 'CampusFlow',
+    title: 'CampusCore',
   },
   openGraph: {
     type: 'website',
-    siteName: 'CampusFlow',
-    title: 'CampusFlow — Campus Productivity Platform',
-    description: 'All-in-one campus productivity platform for students, teachers, parents and admins.',
+    siteName: 'CampusCore',
+    title: 'CampusCore — The Connected Campus Platform',
+    description: 'All-in-one connected campus platform for students, teachers, parents and admins.',
   },
 };
 

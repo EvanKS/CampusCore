@@ -51,31 +51,29 @@ function RegisterFormComponent() {
   }
 
   return (
-    <div className="min-h-screen flex items-center justify-center p-6" style={{ background: 'var(--bg-page)' }}>
+    <div className="min-h-screen flex items-center justify-center p-6 bg-[var(--bg-page)]">
       {/* Theme toggle */}
       <button
-        className="fixed top-6 right-6 btn-secondary p-2.5 shadow-sm"
+        className="fixed top-6 right-6 p-2.5 rounded-xl border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900 shadow-sm text-slate-700 dark:text-slate-200 hover:border-purple-500 transition-colors"
         onClick={() => setTheme(theme === 'dark' ? 'light' : 'dark')}
         aria-label={`Switch to ${theme === 'dark' ? 'light' : 'dark'} theme`}
       >
-        {theme === 'dark' ? <Sun className="w-4 h-4 text-amber-400" /> : <Moon className="w-4 h-4 text-slate-700" />}
+        {theme === 'dark' ? <Sun className="w-4 h-4 text-amber-400" /> : <Moon className="w-4 h-4 text-purple-600" />}
       </button>
 
       <div className="w-full max-w-md space-y-6">
         {/* Logo Header */}
         <div className="flex items-center gap-3">
-          <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-blue-600 to-indigo-800 flex items-center justify-center text-white font-extrabold text-xl shadow-md border border-white/20">
-            C
-          </div>
-          <span className="font-extrabold text-2xl tracking-tight" style={{ color: 'var(--text-primary)' }}>CampusFlow</span>
+          <img src="/logo.png" alt="CampusCore Logo" className="h-10 w-auto object-contain" />
+          <span className="font-black text-2xl tracking-tight text-slate-900 dark:text-slate-100">CampusCore</span>
         </div>
 
         <div>
-          <h1 className="text-2xl sm:text-3xl font-extrabold tracking-tight" style={{ color: 'var(--text-primary)' }}>
+          <h1 className="text-2xl sm:text-3xl font-black tracking-tight text-slate-900 dark:text-slate-100">
             Create your account
           </h1>
-          <p className="text-sm mt-1" style={{ color: 'var(--text-secondary)' }}>
-            Join your campus institution on CampusFlow
+          <p className="text-xs sm:text-sm mt-1 text-slate-500 font-medium">
+            Join your campus institution workspace on CampusCore
           </p>
         </div>
 
@@ -129,7 +127,7 @@ function RegisterFormComponent() {
               />
               <button
                 type="button"
-                className="absolute right-3 top-1/2 -translate-y-1/2 text-slate-400 hover:text-slate-600 dark:hover:text-slate-200 p-1"
+                className="absolute right-3 top-1/2 -translate-y-1/2 text-slate-400 hover:text-purple-600 p-1"
                 onClick={() => setShowPassword((p) => !p)}
                 aria-label={showPassword ? 'Hide password' : 'Show password'}
               >
@@ -146,7 +144,7 @@ function RegisterFormComponent() {
             <label htmlFor="reg-role" className="label">Role *</label>
             <select
               id="reg-role"
-              className="input font-medium"
+              className="input font-bold"
               {...register('role')}
               aria-invalid={!!errors.role}
             >
@@ -172,8 +170,8 @@ function RegisterFormComponent() {
               {...register('institutionSlug')}
               aria-invalid={!!errors.institutionSlug}
             />
-            <p className="text-xs mt-1 font-medium" style={{ color: 'var(--text-muted)' }}>
-              For demo: use <strong className="text-blue-600 dark:text-blue-400">demo-university</strong>
+            <p className="text-xs mt-1 font-medium text-slate-500">
+              For demo: use <strong className="text-purple-600 dark:text-purple-400">demo-university</strong>
             </p>
             {errors.institutionSlug && (
               <p className="text-xs mt-1 text-red-500 font-medium" role="alert">{errors.institutionSlug.message}</p>
@@ -183,7 +181,7 @@ function RegisterFormComponent() {
           {/* Phone (optional) */}
           <div>
             <label htmlFor="reg-phone" className="label">
-              Phone <span style={{ color: 'var(--text-muted)' }}>(optional — for WhatsApp reminders)</span>
+              Phone <span className="text-slate-400 font-medium">(optional — for WhatsApp reminders)</span>
             </label>
             <input
               id="reg-phone"
@@ -204,7 +202,7 @@ function RegisterFormComponent() {
 
           <button
             type="submit"
-            className="btn-primary w-full py-3 text-sm font-bold shadow-md"
+            className="btn-primary w-full py-3 text-xs font-extrabold shadow-md"
             disabled={isSubmitting}
           >
             {isSubmitting ? (
@@ -218,9 +216,9 @@ function RegisterFormComponent() {
           </button>
         </form>
 
-        <p className="text-center text-sm font-medium" style={{ color: 'var(--text-secondary)' }}>
+        <p className="text-center text-xs font-medium text-slate-500">
           Already have an account?{' '}
-          <Link href="/login" className="font-bold text-blue-600 dark:text-blue-400 hover:underline">
+          <Link href="/login" className="font-extrabold text-purple-600 dark:text-purple-400 hover:underline">
             Sign in
           </Link>
         </p>
@@ -236,3 +234,4 @@ export default function RegisterClient() {
     </AuthProvider>
   );
 }
+

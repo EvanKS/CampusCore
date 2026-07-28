@@ -9,6 +9,8 @@ import {
   UsersRound, Plus, Loader2, X, LogIn, LogOut, Video,
   Calendar, Users, ChevronDown, ChevronUp,
 } from 'lucide-react';
+import { PageHeader } from '@/components/layout/PageHeader';
+
 
 interface StudyGroup {
   id: string;
@@ -97,23 +99,24 @@ export default function StudyGroupsPage() {
 
   const groups: StudyGroup[] = data?.data ?? [];
 
+
   return (
+
     <div className="space-y-6 animate-fade-in">
-      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
-        <div className="page-header mb-0">
-          <h1 className="page-title flex items-center gap-2">
-            <UsersRound className="w-7 h-7 text-blue-600 dark:text-blue-400" />
-            Study Groups
-          </h1>
-          <p className="page-subtitle">Collaborate with peers, schedule joint sessions, and share meeting links.</p>
-        </div>
-        {user?.role === 'student' && (
-          <button className="btn-primary shrink-0 shadow-md" onClick={() => setShowForm(p => !p)}>
-            <Plus className="w-4 h-4" />
-            Create Group
-          </button>
-        )}
-      </div>
+      <PageHeader
+        title="Study Groups"
+        category="Tools & AI"
+        breadcrumb="Study Groups"
+        actions={
+          user?.role === 'student' ? (
+            <button className="btn-primary shrink-0 shadow-md" onClick={() => setShowForm(p => !p)}>
+              <Plus className="w-4 h-4" />
+              Create Group
+            </button>
+          ) : undefined
+        }
+      />
+
 
       {/* Create group form */}
       {showForm && (

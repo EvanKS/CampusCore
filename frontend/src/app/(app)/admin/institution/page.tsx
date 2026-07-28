@@ -4,7 +4,9 @@ import { useState, useEffect } from 'react';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import api from '@/lib/api';
 import { useToast } from '@/components/ui/Toaster';
-import { Building2, Save, Loader2, Info } from 'lucide-react';
+import { Save, Loader2, Info } from 'lucide-react';
+import { PageHeader } from '@/components/layout/PageHeader';
+
 
 interface Institution {
   id: string;
@@ -55,14 +57,12 @@ export default function AdminInstitutionPage() {
   }
 
   return (
-    <div className="space-y-6 animate-fade-in max-w-2xl">
-      <div className="page-header">
-        <h1 className="page-title flex items-center gap-2">
-          <Building2 className="w-7 h-7 text-blue-600 dark:text-blue-400" />
-          Institution Settings
-        </h1>
-        <p className="page-subtitle">Configure global institution settings and attendance risk thresholds.</p>
-      </div>
+    <div className="space-y-6 animate-fade-in max-w-3xl">
+      <PageHeader
+        title="Institution Policy & Setup"
+        category="Management"
+        breadcrumb="Institution Setup"
+      />
 
       <div className="card p-6 space-y-6 shadow-sm">
         {/* Info banner */}

@@ -8,6 +8,8 @@ import { useAuth } from '@/contexts/AuthContext';
 import { DEMO_PLACEMENTS } from '@/lib/demoData';
 import { Briefcase, Plus, X, Loader2, Edit3, Trash2 } from 'lucide-react';
 
+import { PageHeader } from '@/components/layout/PageHeader';
+
 interface Application {
   id: string;
   company_name: string;
@@ -38,6 +40,7 @@ export default function PlacementPage() {
     companyName: '', role: '', status: 'applied',
     appliedAt: '', nextStep: '', notes: '',
   });
+
 
   const { data, isLoading } = useQuery({
     queryKey: ['placement'],
@@ -109,19 +112,19 @@ export default function PlacementPage() {
 
   return (
     <div className="space-y-6 animate-fade-in">
-      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
-        <div className="page-header mb-0">
-          <h1 className="page-title flex items-center gap-2">
-            <Briefcase className="w-7 h-7 text-blue-600 dark:text-blue-400" />
-            Placement Application Tracker
-          </h1>
-          <p className="page-subtitle">Track internship & job applications, interview stages, and offers.</p>
-        </div>
-        <button className="btn-primary shrink-0 shadow-md" onClick={() => setShowForm(true)}>
-          <Plus className="w-4 h-4" />
-          Add Application
-        </button>
-      </div>
+      <PageHeader
+        title="Placement Application Tracker"
+        category="Tools & AI"
+        breadcrumb="Placement Tracker"
+        actions={
+          <button className="btn-primary shrink-0 shadow-md" onClick={() => setShowForm(true)}>
+            <Plus className="w-4 h-4" />
+            Add Application
+          </button>
+        }
+      />
+
+
 
       {/* Stats Cards */}
       <div className="grid grid-cols-2 sm:grid-cols-4 gap-4">

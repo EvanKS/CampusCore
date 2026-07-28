@@ -3,6 +3,8 @@
 import { useQuery } from '@tanstack/react-query';
 import api from '@/lib/api';
 import { GraduationCap, Loader2, TrendingUp, TrendingDown } from 'lucide-react';
+import { PageHeader } from '@/components/layout/PageHeader';
+
 
 interface Student {
   id: string;
@@ -44,14 +46,14 @@ export default function StudentsPage() {
   }, {});
 
   return (
+
     <div className="space-y-6 animate-fade-in">
-      <div className="page-header">
-        <h1 className="page-title flex items-center gap-2">
-          <GraduationCap className="w-7 h-7 text-blue-600 dark:text-blue-400" />
-          Students Roster & Performance
-        </h1>
-        <p className="page-subtitle">Enrolled students and subject-by-subject attendance overview.</p>
-      </div>
+      <PageHeader
+        title="Students Roster & Performance"
+        category="Academics"
+        breadcrumb="Students Roster"
+      />
+
 
       {isLoading ? (
         <div className="flex items-center justify-center py-16">

@@ -59,7 +59,7 @@ export async function sendEmail(params: {
   try {
     const transporter = getEmailTransporter();
     await transporter.sendMail({
-      from: process.env.SMTP_FROM || 'CampusFlow <noreply@campusflow.app>',
+      from: process.env.SMTP_FROM || 'CampusCore <noreply@campuscore.app>',
       to: params.to,
       subject: params.subject,
       html: params.html,
@@ -245,7 +245,7 @@ export async function broadcastNoticeToStudents(params: {
 
     const message = (params.aiSummary
       ? `📢 *${params.title}*\n\n${params.aiSummary}`
-      : `📢 *${params.title}*\n\nPlease check CampusFlow for full details.`)
+      : `📢 *${params.title}*\n\nPlease check CampusCore for full details.`)
       + `\n\n📅 *Add to Google Calendar:* ${gcalUrl}`;
 
     // Direct fallback: only if n8n failed, and only unique phones

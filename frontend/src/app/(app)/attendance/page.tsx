@@ -5,8 +5,11 @@ import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import api from '@/lib/api';
 import { useAuth } from '@/contexts/AuthContext';
 import { useToast } from '@/components/ui/Toaster';
-import { Loader2, ClipboardCheck, Users, AlertCircle } from 'lucide-react';
+import { Loader2, Users, AlertCircle } from 'lucide-react';
+
 import { DEMO_ATTENDANCE_SUMMARY, DEMO_ATTENDANCE_RECORDS } from '@/lib/demoData';
+
+import { PageHeader } from '@/components/layout/PageHeader';
 
 interface AttendanceRecord {
   id: string;
@@ -58,6 +61,7 @@ export default function AttendancePage() {
 
   const childrenList: Array<{ id: string; full_name: string }> = childrenData?.data ?? [];
   const activeChildId = selectedChildId || childrenList[0]?.id || '';
+
 
   // State for teacher / admin marking
   const [selectedSubject, setSelectedSubject] = useState('');
@@ -176,38 +180,30 @@ export default function AttendancePage() {
 
   return (
     <div className="space-y-6 animate-fade-in">
-      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
-        <div className="page-header mb-0">
-          <h1 className="page-title flex items-center gap-2">
-            <ClipboardCheck className="w-7 h-7 text-blue-600 dark:text-blue-400" />
-            {isTeacherOrAdmin ? 'Class Attendance Portal' : 'Attendance Tracking'}
-          </h1>
-          <p className="page-subtitle">
-            {isTeacherOrAdmin
-              ? 'Select course subject & session date to record or update class attendance.'
-              : isParent
-              ? 'Monitor subject attendance records for linked student profiles.'
-              : 'Track attendance percentage and risk threshold alerts across all subjects.'}
-          </p>
-        </div>
+      <PageHeader
+        title={isTeacherOrAdmin ? 'Class Attendance Portal' : 'Attendance Tracking'}
+        category="Academics"
+        breadcrumb="Attendance"
+        actions={
+          isParent && childrenList.length > 1 ? (
+            <div className="flex items-center gap-2">
+              <span className="text-xs font-bold uppercase tracking-wider text-slate-400">Child:</span>
+              <select
+                className="input py-1.5 px-3 text-xs w-auto font-bold"
+                value={activeChildId}
+                onChange={e => setSelectedChildId(e.target.value)}
+              >
+                {childrenList.map(c => (
+                  <option key={c.id} value={c.id}>
+                    {c.full_name}
+                  </option>
+                ))}
+              </select>
+            </div>
+          ) : undefined
+        }
+      />
 
-        {isParent && childrenList.length > 1 && (
-          <div className="flex items-center gap-2">
-            <span className="text-xs font-bold uppercase tracking-wider" style={{ color: 'var(--text-muted)' }}>Child:</span>
-            <select
-              className="input py-1.5 px-3 text-xs w-auto font-semibold"
-              value={activeChildId}
-              onChange={e => setSelectedChildId(e.target.value)}
-            >
-              {childrenList.map(c => (
-                <option key={c.id} value={c.id}>
-                  {c.full_name}
-                </option>
-              ))}
-            </select>
-          </div>
-        )}
-      </div>
 
       {/* TEACHER / ADMIN ATTENDANCE MARKING PORTAL */}
       {isTeacherOrAdmin && (

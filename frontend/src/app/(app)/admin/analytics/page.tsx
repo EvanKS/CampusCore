@@ -3,7 +3,9 @@
 import { useState } from 'react';
 import { useQuery } from '@tanstack/react-query';
 import api from '@/lib/api';
-import { BarChart3, Users, TrendingUp, Shield } from 'lucide-react';
+import { Users, TrendingUp, Shield } from 'lucide-react';
+
+import { PageHeader } from '@/components/layout/PageHeader';
 
 type AnalyticsTab = 'overview' | 'automation';
 
@@ -31,26 +33,25 @@ export default function AdminAnalyticsPage() {
   const automationHealth = analytics?.automationHealth ?? [];
 
   return (
+
     <div className="space-y-6 animate-fade-in">
-      <div className="page-header">
-        <h1 className="page-title flex items-center gap-2">
-          <BarChart3 className="w-7 h-7 text-blue-600 dark:text-blue-400" />
-          Institution Analytics & Audit Hub
-        </h1>
-        <p className="page-subtitle">Platform utilization metrics, task status ratios, and automation logs.</p>
-      </div>
+      <PageHeader
+        title="Institution Analytics & Audit Hub"
+        category="Management"
+        breadcrumb="Analytics Overview"
+      />
 
       {/* Tab switcher */}
-      <div className="flex gap-1.5 p-1.5 rounded-2xl bg-[var(--bg-input)] border border-[var(--border-default)] w-fit" role="tablist">
+      <div className="flex gap-1.5 p-1.5 rounded-2xl bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 shadow-sm w-fit" role="tablist">
         {(['overview', 'automation'] as AnalyticsTab[]).map(t => (
           <button
             key={t}
             role="tab"
             aria-selected={tab === t}
-            className={`px-5 py-2 rounded-xl text-xs sm:text-sm font-bold capitalize transition-all ${
+            className={`px-5 py-2.5 rounded-xl text-xs font-black capitalize transition-all ${
               tab === t
-                ? 'bg-blue-600 text-white shadow-md'
-                : 'text-[var(--text-secondary)] hover:text-[var(--text-primary)] hover:bg-[var(--bg-card-hover)]'
+                ? 'bg-purple-600 text-white shadow-md shadow-purple-500/20'
+                : 'text-slate-600 dark:text-slate-400 hover:text-purple-600 hover:bg-purple-50 dark:hover:bg-slate-800'
             }`}
             onClick={() => setTab(t)}
           >
@@ -58,6 +59,7 @@ export default function AdminAnalyticsPage() {
           </button>
         ))}
       </div>
+
 
       {tab === 'overview' && (
         <>
