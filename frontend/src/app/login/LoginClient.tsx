@@ -19,10 +19,10 @@ const loginSchema = z.object({
 type LoginFormValues = z.infer<typeof loginSchema>;
 
 const demoUsers = [
-  { label: 'Student', email: 'rahul.verma@demo-university.edu', password: 'Student@123', icon: '🎓' },
+  { label: 'You (Student)', email: 'sreehari.s@btech.christuniversity.in', password: '', icon: '🎓' },
+  { label: 'Rahul (Student)', email: 'rahul.verma@demo-university.edu', password: 'Student@123', icon: '📚' },
   { label: 'Teacher', email: 'priya.sharma@demo-university.edu', password: 'Teacher@123', icon: '📖' },
-  { label: 'Parent', email: 'parent@demo-university.edu', password: 'Parent@123', icon: '👨‍👩‍👧' },
-  { label: 'Admin', email: 'oreo@gmail.com', password: 'oreo12345', icon: '🛡️' },
+  { label: 'Admin', email: 'admin@demo-university.edu', password: 'Admin@123', icon: '🛡️' },
 ];
 
 function LoginForm() {
@@ -47,12 +47,13 @@ function LoginForm() {
   const {
     register,
     handleSubmit,
+    setValue,
     formState: { errors, isSubmitting },
   } = useForm<LoginFormValues>({
     resolver: zodResolver(loginSchema),
     defaultValues: {
-      email: 'oreo@gmail.com',
-      password: 'oreo12345',
+      email: '',
+      password: '',
     },
   });
 
@@ -82,11 +83,11 @@ function LoginForm() {
         />
 
         <div className="relative z-10">
-          <div className="flex items-center gap-3">
-            <div className="bg-white p-2 rounded-xl shadow-md border border-white/30 inline-flex items-center justify-center">
-              <img src="/logo.png" alt="CampusCore Logo" className="h-8 w-auto object-contain" />
+          <div className="flex flex-col items-start gap-3">
+            <div className="bg-white rounded-3xl shadow-2xl p-5 inline-flex items-center justify-center">
+              <img src="/logo.png" alt="CampusCore Logo" className="h-24 w-auto object-contain" />
             </div>
-            <span className="text-white text-2xl font-black tracking-tight">CampusCore</span>
+            <span className="text-blue-200/70 text-xs font-semibold tracking-widest uppercase">The Connected Campus Platform</span>
           </div>
         </div>
 
@@ -134,11 +135,14 @@ function LoginForm() {
 
         <div className="w-full max-w-md space-y-6">
           {/* Mobile logo */}
-          <div className="lg:hidden flex items-center gap-3 mb-6">
-            <div className="bg-white p-2 rounded-xl shadow-md border border-slate-200 inline-flex items-center justify-center">
-              <img src="/logo.png" alt="CampusCore Logo" className="h-8 w-auto object-contain" />
+          <div className="lg:hidden flex items-center gap-4 mb-6">
+            <div className="bg-white rounded-2xl shadow-lg p-3 inline-flex items-center justify-center">
+              <img src="/logo.png" alt="CampusCore Logo" className="h-16 w-auto object-contain" />
             </div>
-            <span className="font-extrabold text-xl tracking-tight text-slate-900 dark:text-slate-100">CampusCore</span>
+            <div>
+              <span className="font-black text-2xl tracking-tight text-slate-900 dark:text-slate-100 block">CampusCore</span>
+              <span className="text-xs font-semibold text-slate-400 tracking-widest uppercase">Connected Campus</span>
+            </div>
           </div>
 
           <div>
@@ -240,16 +244,11 @@ function LoginForm() {
                   key={demo.label}
                   type="button"
                   className="btn-secondary py-2.5 px-3 text-xs font-semibold gap-2 justify-start hover:border-blue-500"
-                  onClick={async () => {
-                    setError('');
-                    try {
-                      await login(demo.email, demo.password);
-                      router.push('/dashboard');
-                    } catch {
-                      setError('Demo login failed. Check backend connection.');
-                    }
+                  onClick={() => {
+                    setValue('email', demo.email);
+                    setValue('password', demo.password);
                   }}
-                  aria-label={`Sign in as ${demo.label}`}
+                  aria-label={`Fill ${demo.label} credentials`}
                 >
                   <span>{demo.icon}</span>
                   <span>{demo.label}</span>
