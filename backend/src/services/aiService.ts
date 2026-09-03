@@ -7,14 +7,19 @@
  * For production scale, upgrade to a paid tier or implement request queuing.
  */
 
+import https from 'https';
 import Groq from 'groq-sdk';
 import { logger } from '../utils/logger';
 
 let groqClient: Groq | null = null;
+const httpsAgent = new https.Agent({ rejectUnauthorized: false });
 
 function getGroqClient(): Groq {
-  if (!groqClient) {
-    groqClient = new Groq({ apiKey: process.env.GROQ_API_KEY });
+  if (!groqClient || (groqClient as any).apiKey !== process.env.GROQ_API_KEY) {
+    groqClient = new Groq({
+      apiKey: process.env.GROQ_API_KEY,
+      httpAgent: httpsAgent,
+    });
   }
   return groqClient;
 }
@@ -27,7 +32,7 @@ async function callAI(systemPrompt: string, userPrompt: string): Promise<string>
   try {
     const groq = getGroqClient();
     const completion = await groq.chat.completions.create({
-      model: process.env.GROQ_MODEL || 'llama-3.3-70b-versatile',
+      model: process.env.GROQ_MODEL || 'openai/gpt-oss-120b',
       messages: [
         { role: 'system', content: systemPrompt },
         { role: 'user', content: userPrompt },
@@ -166,7 +171,7 @@ Be concise, encouraging, and academically accurate.`;
     ];
 
     const completion = await groq.chat.completions.create({
-      model: process.env.GROQ_MODEL || 'llama-3.3-70b-versatile',
+      model: process.env.GROQ_MODEL || 'openai/gpt-oss-120b',
       messages,
       max_tokens: 1024,
       temperature: 0.8,

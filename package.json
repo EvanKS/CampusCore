@@ -1,0 +1,12 @@
+{
+  "name": "campuscore",
+  "version": "1.0.0",
+  "description": "Production-grade, multi-tenant campus productivity and academic management platform",
+  "scripts": {
+    "dev:backend": "npm run --prefix backend dev",
+    "dev:frontend": "npm run --prefix frontend dev",
+    "build:backend": "npm run --prefix backend build",
+    "build:frontend": "npm run --prefix frontend build"
+  }
+}
+
