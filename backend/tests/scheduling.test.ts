@@ -37,6 +37,31 @@ jest.mock('bullmq', () => ({
 }));
 
 // Mock dependencies that queueService pulls in
+jest.mock('../src/db/supabase', () => ({
+  supabase: {
+    from: jest.fn().mockReturnValue({
+      select: jest.fn().mockReturnThis(),
+      eq: jest.fn().mockReturnThis(),
+      single: jest.fn().mockResolvedValue({ data: null, error: null }),
+      insert: jest.fn().mockResolvedValue({ data: null, error: null }),
+      upsert: jest.fn().mockResolvedValue({ data: null, error: null }),
+      update: jest.fn().mockResolvedValue({ data: null, error: null }),
+      delete: jest.fn().mockResolvedValue({ data: null, error: null }),
+    }),
+  },
+  default: {
+    from: jest.fn().mockReturnValue({
+      select: jest.fn().mockReturnThis(),
+      eq: jest.fn().mockReturnThis(),
+      single: jest.fn().mockResolvedValue({ data: null, error: null }),
+      insert: jest.fn().mockResolvedValue({ data: null, error: null }),
+      upsert: jest.fn().mockResolvedValue({ data: null, error: null }),
+      update: jest.fn().mockResolvedValue({ data: null, error: null }),
+      delete: jest.fn().mockResolvedValue({ data: null, error: null }),
+    }),
+  },
+}));
+
 jest.mock('../src/db/pool', () => ({
   query: jest.fn().mockResolvedValue({ rows: [], rowCount: 0 }),
   withTransaction: jest.fn(),

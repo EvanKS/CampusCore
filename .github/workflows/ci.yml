@@ -1,4 +1,4 @@
-name: CampusFlow CI
+name: CampusCore CI
 
 on:
   push:
