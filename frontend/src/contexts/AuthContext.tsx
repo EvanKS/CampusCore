@@ -1,7 +1,7 @@
 'use client';
 
 import { createContext, useContext, useEffect, useState, useCallback } from 'react';
-import api from '@/lib/api';
+import api, { API_URL } from '@/lib/api';
 
 export interface User {
   id: string;
@@ -153,7 +153,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
       const isNetworkError = (err as { code?: string })?.code === 'ERR_NETWORK'
         || (err as { message?: string })?.message?.includes('Network Error');
       if (isNetworkError) {
-        throw new Error('Backend unreachable at http://localhost:4000. Ensure backend server is running.');
+        throw new Error(`Backend unreachable at ${API_URL}. Ensure backend server is active and CORS is configured.`);
       }
       throw err;
     }
